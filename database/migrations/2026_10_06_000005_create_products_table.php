@@ -22,8 +22,6 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->decimal('purchase_price', 15, 2);
             $table->decimal('selling_price', 15, 2);
-            $table->integer('stock');
-            $table->integer('minimum_stock');
             $table->boolean('is_active');
             $table->string('image')->nullable();
             $table->timestamps();
@@ -36,7 +34,6 @@ return new class extends Migration
             $table->unique(['business_id', 'sku']);
             $table->unique(['business_id', 'barcode'])->whereNotNull('barcode');
             $table->index(['business_id', 'is_active']);
-            $table->index(['business_id', 'stock']);
         });
     }
 

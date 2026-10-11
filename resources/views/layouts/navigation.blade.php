@@ -5,16 +5,46 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
+                    <a href="{{ route('pos.index') }}">
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
+                    <x-nav-link :href="route('pos.index')" :active="request()->routeIs('pos.*')">
+                        <span class="font-bold text-teal-700">🛒 {{ __('Kasir (POS)') }}</span>
                     </x-nav-link>
+
+                    <x-nav-link :href="route('reports.sales')" :active="request()->routeIs('reports.*')">
+                        {{ __('Laporan') }}
+                    </x-nav-link>
+
+                    <x-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')">
+                        {{ __('Produk & Stok') }}
+                    </x-nav-link>
+
+                    <x-nav-link :href="route('customers.index')" :active="request()->routeIs('customers.*')">
+                        {{ __('Pelanggan') }}
+                    </x-nav-link>
+
+                    @can('purchases view')
+                        <x-nav-link :href="route('purchases.index')" :active="request()->routeIs('purchases.index')">
+                            {{ __('Supplier') }}
+                        </x-nav-link>
+                    @endcan
+
+                    @can('users view')
+                        <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
+                            {{ __('Karyawan') }}
+                        </x-nav-link>
+                    @endcan
+
+                    @can('business settings')
+                        <x-nav-link :href="route('business.settings')" :active="request()->routeIs('business.settings')">
+                            {{ __('Pengaturan') }}
+                        </x-nav-link>
+                    @endcan
                 </div>
             </div>
 
@@ -34,8 +64,8 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
+                        <x-dropdown-link :href="route('business.settings')">
+                            {{ __('Pengaturan') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->
@@ -67,9 +97,39 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
+            <x-responsive-nav-link :href="route('pos.index')" :active="request()->routeIs('pos.*')">
+                🛒 {{ __('Kasir (POS)') }}
             </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('reports.sales')" :active="request()->routeIs('reports.*')">
+                {{ __('Laporan') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')">
+                {{ __('Produk & Stok') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('customers.index')" :active="request()->routeIs('customers.*')">
+                {{ __('Pelanggan') }}
+            </x-responsive-nav-link>
+
+            @can('purchases view')
+                <x-responsive-nav-link :href="route('purchases.index')" :active="request()->routeIs('purchases.index')">
+                    {{ __('Supplier') }}
+                </x-responsive-nav-link>
+            @endcan
+
+            @can('users view')
+                <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
+                    {{ __('Karyawan') }}
+                </x-responsive-nav-link>
+            @endcan
+
+            @can('business settings')
+                <x-responsive-nav-link :href="route('business.settings')" :active="request()->routeIs('business.settings')">
+                    {{ __('Pengaturan') }}
+                </x-responsive-nav-link>
+            @endcan
         </div>
 
         <!-- Responsive Settings Options -->
@@ -80,8 +140,8 @@
             </div>
 
             <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
+                <x-responsive-nav-link :href="route('business.settings')">
+                    {{ __('Pengaturan') }}
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->

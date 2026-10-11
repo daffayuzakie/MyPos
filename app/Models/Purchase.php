@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToBusiness;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\BelongsToBusiness;
 
 class Purchase extends Model
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, BelongsToBusiness;
+    use BelongsToBusiness, HasFactory;
 
     protected $fillable = [
         'business_id',
@@ -24,6 +24,7 @@ class Purchase extends Model
 
     protected $casts = [
         'total_amount' => 'decimal:2',
+        'purchase_date' => 'datetime',
     ];
 
     protected $table = 'purchases';

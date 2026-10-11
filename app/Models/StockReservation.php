@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToBusiness;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\BelongsToBusiness;
 
 class StockReservation extends Model
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, BelongsToBusiness;
+    use BelongsToBusiness, HasFactory;
 
     protected $fillable = [
         'business_id',
@@ -44,12 +44,20 @@ class StockReservation extends Model
 
     public function isActive(): bool
     {
-        return $this->status === 'active' && !$this->expires_at->isPast();
+        return $this->status === 'active' && ! $this->expires_at->isPast();
     }
 
     public function isExpired(): bool
     {
-        return $this->status === 'active' && $this->expires_at->isPast();
+        if ($this->status === 'expired') {
+            return true;
+        }
+
+        if ($this->status !== 'active' || ! $this->expires_at) {
+            return false;
+        }
+
+        return $this->expires_at->isPast();
     }
 
     public function isConverted(): bool

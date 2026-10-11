@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToBusiness;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\BelongsToBusiness;
 
 class Category extends Model
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, BelongsToBusiness;
+    use BelongsToBusiness, HasFactory;
 
     protected $fillable = [
         'business_id',
@@ -40,7 +40,6 @@ class Category extends Model
      * Usage: Category::whereBusiness($businessId)->get()
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  int  $businessId
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeWhereBusiness(Builder $query, int $businessId): Builder

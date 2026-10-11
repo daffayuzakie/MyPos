@@ -1,3 +1,39 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .pos-sidebar-link {
+        @apply flex items-center gap-3 px-4 py-3 text-sm text-gray-600 hover:bg-teal-50 hover:text-teal-700 rounded-lg transition-colors;
+    }
+    .pos-sidebar-link.active {
+        @apply bg-teal-50 text-teal-700 border-l-4 border-teal-700;
+    }
+    .pos-btn-primary {
+        @apply bg-teal-700 text-white px-4 py-2 rounded-lg hover:bg-teal-800 transition-colors font-medium;
+    }
+    .pos-btn-secondary {
+        @apply bg-white text-gray-700 px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors font-medium;
+    }
+    .pos-card {
+        @apply bg-white rounded-xl shadow-sm border border-gray-100 p-6;
+    }
+    .pos-product-card {
+        @apply bg-white rounded-xl border border-gray-100 p-3 cursor-pointer hover:shadow-md transition-shadow relative;
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+}
+
+/* Print styles for receipt */
+@media print {
+    body * { visibility: hidden; }
+    .receipt-content, .receipt-content * { visibility: visible; }
+    .receipt-content { position: absolute; left: 0; top: 0; width: 80mm; font-size: 12px; }
+    .no-print { display: none !important; }
+}

@@ -26,6 +26,16 @@ class UserPolicy extends Policy
         return $this->authorizeBusiness($user, $target) && $user->can('users edit');
     }
 
+    public function activate(User $user, User $target): bool
+    {
+        // Prevent self-activation (though not harmful, keep consistent)
+        if ($user->id === $target->id) {
+            return false;
+        }
+
+        return $this->authorizeBusiness($user, $target) && $user->can('users edit');
+    }
+
     public function deactivate(User $user, User $target): bool
     {
         // Prevent self-deactivation
@@ -41,7 +51,7 @@ class UserPolicy extends Policy
         // Valid roles for business
         $validRoles = ['admin', 'kasir'];
 
-        if (!in_array($role, $validRoles)) {
+        if (! in_array($role, $validRoles)) {
             return false;
         }
 
@@ -51,12 +61,12 @@ class UserPolicy extends Policy
         }
 
         // Must own the target user's business
-        if (!$this->authorizeBusiness($user, $target)) {
+        if (! $this->authorizeBusiness($user, $target)) {
             return false;
         }
 
         // Must have edit permission
-        if (!$user->can('users edit')) {
+        if (! $user->can('users edit')) {
             return false;
         }
 

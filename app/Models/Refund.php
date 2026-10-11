@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToBusiness;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\BelongsToBusiness;
 
 class Refund extends Model
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, BelongsToBusiness;
+    use BelongsToBusiness, HasFactory;
 
     protected $fillable = [
         'business_id',
@@ -69,5 +69,10 @@ class Refund extends Model
     public function isFailed(): bool
     {
         return $this->status === 'failed';
+    }
+
+    public function items()
+    {
+        return $this->hasMany(RefundItem::class);
     }
 }

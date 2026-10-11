@@ -19,7 +19,7 @@ class SalePolicy extends Policy
             return $this->authorizeBusiness($user, $sale) && $user->can('sales view-all');
         }
 
-        return $this->authorizeBusiness($user, $sale) 
+        return $this->authorizeBusiness($user, $sale)
             && $user->can('sales view-own')
             && $sale->user_id === $user->id;
     }
@@ -35,7 +35,7 @@ class SalePolicy extends Policy
             return $this->authorizeBusiness($user, $sale) && $user->can('sales cancel');
         }
 
-        return $this->authorizeBusiness($user, $sale) 
+        return $this->authorizeBusiness($user, $sale)
             && $sale->user_id === $user->id
             && $user->can('sales cancel');
     }

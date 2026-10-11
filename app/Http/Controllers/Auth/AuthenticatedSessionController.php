@@ -28,6 +28,18 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        $user = $request->user();
+        $business = $user->business;
+
+        if ($business && $business->branches()->where('is_active', true)->count() > 1
+            && $user->hasAnyRole(['admin', 'manajer'])) {
+            return redirect()->route('branches.select');
+        }
+
+        if ($user->hasRole('kasir')) {
+            return redirect()->route('pos.index');
+        }
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 

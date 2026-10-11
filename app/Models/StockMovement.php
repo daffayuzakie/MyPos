@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToBusiness;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\BelongsToBusiness;
 
 class StockMovement extends Model
 {
-    /** @use HasFactory<UserFactory> */
-    use HasFactory, BelongsToBusiness;
+    /** @use HasFactory<StockMovementFactory> */
+    use BelongsToBusiness, HasFactory;
 
     protected $fillable = [
         'business_id',
@@ -20,6 +21,7 @@ class StockMovement extends Model
         'reference_type',
         'reference_id',
         'note',
+        'reason',
         'stock_before',
         'stock_after',
     ];
@@ -46,5 +48,30 @@ class StockMovement extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function scopeIn(Builder $query): Builder
+    {
+        return $query->where('type', 'in');
+    }
+
+    public function scopeOut(Builder $query): Builder
+    {
+        return $query->where('type', 'out');
+    }
+
+    public function scopeAdjustment(Builder $query): Builder
+    {
+        return $query->where('type', 'adjustment');
+    }
+
+    public function getTypeLabelAttribute(): string
+    {
+        return match ($this->type) {
+            'in' => 'Masuk',
+            'out' => 'Keluar',
+            'adjustment' => 'Penyesuaian',
+            default => $this->type,
+        };
     }
 }

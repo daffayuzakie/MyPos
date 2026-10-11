@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Business;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\Log;
 
 class BusinessRegistrationSeeder extends Seeder
 {
@@ -13,7 +13,8 @@ class BusinessRegistrationSeeder extends Seeder
     {
         // Check if business already exists
         if (Business::exists()) {
-            \Illuminate\Support\Facades\Log::info('Business already exists, skipping registration.');
+            Log::info('Business already exists, skipping registration.');
+
             return;
         }
 
@@ -41,7 +42,7 @@ class BusinessRegistrationSeeder extends Seeder
         // Assign admin role
         $adminUser->assignRole('admin');
 
-        \Illuminate\Support\Facades\Log::info('Business and admin user registered successfully.', [
+        Log::info('Business and admin user registered successfully.', [
             'business_id' => $business->id,
             'admin_user_id' => $adminUser->id,
         ]);

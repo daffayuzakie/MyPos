@@ -2,31 +2,58 @@
 
 namespace App\Models;
 
+use Database\Factories\BusinessFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Business extends Model
 {
-    /** @use HasFactory<UserFactory> */
+    /** @use HasFactory<BusinessFactory> */
     use HasFactory;
 
     protected $fillable = [
         'name',
         'slug',
+        'type',
+        'timezone',
         'email',
         'phone',
         'address',
         'logo',
         'tax_percentage',
+        'payment_methods',
+        'onboarded_at',
         'invoice_prefix',
         'invoice_sequence',
     ];
 
     protected $hidden = [];
 
+    protected $casts = [
+        'tax_percentage' => 'decimal:2',
+        'payment_methods' => 'array',
+        'onboarded_at' => 'datetime',
+    ];
+
+    public function getLogoUrlAttribute(): ?string
+    {
+        return $this->logo ? Storage::url($this->logo) : null;
+    }
+
     public function users()
     {
         return $this->hasMany(User::class);
+    }
+
+    public function branches()
+    {
+        return $this->hasMany(Branch::class);
+    }
+
+    public function primaryBranch()
+    {
+        return $this->hasOne(Branch::class)->where('is_primary', true);
     }
 
     public function categories()
@@ -62,5 +89,10 @@ class Business extends Model
     public function expenses()
     {
         return $this->hasMany(Expense::class);
+    }
+
+    public function customers()
+    {
+        return $this->hasMany(Customer::class);
     }
 }

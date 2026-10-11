@@ -3,11 +3,13 @@
 require __DIR__.'/vendor/autoload.php';
 
 $app = require __DIR__.'/bootstrap/app.php';
-$kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
+$kernel = $app->make(Kernel::class);
 $kernel->bootstrap();
 
-use Spatie\Permission\Models\Role;
+use App\Models\User;
+use Illuminate\Contracts\Console\Kernel;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 // Get existing roles
 $adminRole = Role::where('name', 'admin')->where('guard_name', 'web')->first();
@@ -23,7 +25,7 @@ $permissionNames = [
 ];
 
 foreach ($permissionNames as $name) {
-    if (!Permission::where('name', $name)->where('guard_name', 'web')->exists()) {
+    if (! Permission::where('name', $name)->where('guard_name', 'web')->exists()) {
         Permission::create(['name' => $name, 'guard_name' => 'web']);
     }
 }
@@ -44,7 +46,7 @@ if ($kasirRole) {
         'purchases view',
         'reports view',
     ];
-    
+
     $kasirPermissionIds = [];
     foreach ($kasirPermissions as $name) {
         $id = Permission::where('name', $name)->where('guard_name', 'web')->value('id');
@@ -52,13 +54,13 @@ if ($kasirRole) {
             $kasirPermissionIds[] = $id;
         }
     }
-    
+
     $kasirRole->permissions()->sync($kasirPermissionIds);
     echo "Kasir role permissions updated\n";
 }
 
 // Assign admin role to the first user
-$user = \App\Models\User::first();
+$user = User::first();
 if ($user) {
     // First, remove all existing roles
     $user->removeRole($user->getRoleNames());

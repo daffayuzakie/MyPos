@@ -24,13 +24,11 @@ class StockMovementPolicy extends Policy
 
     public function update(User $user, StockMovement $movement): bool
     {
-        return $this->authorizeBusiness($user, $movement) && $user->can('stock edit');
+        return false; // Immutable - no updates
     }
 
     public function delete(User $user, StockMovement $movement): bool
     {
-        // Stock movements are immutable audit records
-        // Only allow marking as void/reversed via status change, not hard delete
-        return false;
+        return false; // Immutable - no deletes
     }
 }
