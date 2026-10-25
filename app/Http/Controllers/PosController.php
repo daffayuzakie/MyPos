@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\HeldTransaction;
+use App\Models\Payment;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Services\DiscountService;
@@ -12,14 +13,26 @@ use App\Services\MidtransService;
 use App\Services\PaymentService;
 use App\Services\SaleService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class PosController extends Controller
 {
+    /**
+     * Maximum number of products returned to the POS grid per request.
+     * Keeps the initial page payload and search responses bounded.
+     */
+    private const PRODUCT_PAGE_SIZE = 100;
+
     public function index(MidtransService $midtrans)
     {
         $businessId = auth()->user()->business_id;
 
-        $products = Product::with('category')->where('business_id', $businessId)->where('is_active', true)->get();
+        $products = Product::with('category:id,name')
+            ->where('business_id', $businessId)
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->limit(self::PRODUCT_PAGE_SIZE)
+            ->get(['id', 'name', 'sku', 'barcode', 'selling_price', 'stock', 'category_id', 'image']);
         $categories = Category::where('business_id', $businessId)->get();
         $heldTransactionsCount = HeldTransaction::where('business_id', $businessId)->count();
 
@@ -39,11 +52,11 @@ class PosController extends Controller
 
     public function searchProducts(Request $request)
     {
-        $query = Product::with('category')
+        $query = Product::with('category:id,name')
             ->where('business_id', auth()->user()->business_id)
             ->where('is_active', true);
 
-        if ($request->has('q')) {
+        if ($request->filled('q')) {
             $searchTerm = $request->q;
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('name', 'like', "%{$searchTerm}%")
@@ -52,22 +65,14 @@ class PosController extends Controller
             });
         }
 
-        if ($request->has('category_id') && $request->category_id) {
+        if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
         }
 
-        $products = $query->get()->map(function ($product) {
-            return [
-                'id' => $product->id,
-                'name' => $product->name,
-                'sku' => $product->sku,
-                'barcode' => $product->barcode,
-                'selling_price' => $product->selling_price,
-                'stock' => $product->stock,
-                'category_id' => $product->category_id,
-                'category_name' => $product->category ? $product->category->name : null,
-            ];
-        });
+        $products = $query
+            ->orderBy('name')
+            ->limit(self::PRODUCT_PAGE_SIZE)
+            ->get(['id', 'name', 'sku', 'barcode', 'selling_price', 'stock', 'category_id', 'image']);
 
         return response()->json($products);
     }
@@ -177,13 +182,23 @@ class PosController extends Controller
     /**
      * Poll the status of a sale (used while waiting for a Midtrans webhook).
      */
-    public function getSaleStatus(int $saleId)
+    public function getSaleStatus(int $saleId, PaymentService $paymentService)
     {
         $sale = Sale::with(['payments', 'items.product', 'customer'])
             ->where('business_id', auth()->user()->business_id)
             ->findOrFail($saleId);
 
         $payment = $sale->payments->sortByDesc('id')->first();
+
+        if ($sale->status === 'pending'
+            && $payment
+            && $payment->provider === 'midtrans'
+            && $payment->status === 'pending') {
+            $this->reconcileMidtransIfDue($paymentService, $payment);
+
+            $sale = $sale->fresh(['payments', 'items.product', 'customer']);
+            $payment = $sale->payments->sortByDesc('id')->first();
+        }
 
         return response()->json([
             'sale_id' => $sale->id,
@@ -192,6 +207,19 @@ class PosController extends Controller
             'total_amount' => $sale->total_amount,
             'invoice_number' => $sale->invoice_number,
         ]);
+    }
+
+    /**
+     * Pull the latest status from Midtrans at most once per throttle window.
+     */
+    protected function reconcileMidtransIfDue(PaymentService $paymentService, Payment $payment): void
+    {
+        $key = "midtrans:reconcile:{$payment->id}";
+        $throttle = (int) config('midtrans.reconcile_throttle_seconds', 5);
+
+        if (Cache::add($key, true, now()->addSeconds($throttle))) {
+            $paymentService->reconcileWithMidtrans($payment);
+        }
     }
 
     public function holdTransaction(Request $request)
@@ -274,18 +302,11 @@ class PosController extends Controller
         return response()->json(['discount_amount' => $discountAmount]);
     }
 
-    public function getCategories()
-    {
-        $categories = Category::where('business_id', auth()->user()->business_id)->get();
-
-        return response()->json($categories);
-    }
-
     public function searchCustomers(Request $request)
     {
         $query = Customer::where('business_id', auth()->user()->business_id);
 
-        if ($request->has('q')) {
+        if ($request->filled('q')) {
             $searchTerm = $request->q;
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('name', 'like', "%{$searchTerm}%")
@@ -293,6 +314,8 @@ class PosController extends Controller
             });
         }
 
-        return response()->json($query->get());
+        return response()->json(
+            $query->orderBy('name')->limit(20)->get(['id', 'name', 'phone', 'email', 'level'])
+        );
     }
 }

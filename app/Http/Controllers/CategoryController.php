@@ -38,7 +38,7 @@ class CategoryController extends Controller
                 'is_active' => $request->boolean('is_active'),
             ]);
 
-            return redirect()->route('categories.index')
+            return $this->redirectAfter($request)
                 ->with('success', 'Category created successfully.');
         });
     }
@@ -61,20 +61,33 @@ class CategoryController extends Controller
                 'is_active' => $request->boolean('is_active'),
             ]);
 
-            return redirect()->route('categories.index')
+            return $this->redirectAfter($request)
                 ->with('success', 'Category updated successfully.');
         });
     }
 
-    public function destroy(Category $category)
+    public function destroy(Request $request, Category $category)
     {
         $this->authorize('delete', $category);
 
-        return DB::transaction(function () use ($category) {
+        return DB::transaction(function () use ($request, $category) {
             $category->delete();
 
-            return redirect()->route('categories.index')
+            return $this->redirectAfter($request)
                 ->with('success', 'Category deleted successfully.');
         });
+    }
+
+    /**
+     * Redirect back to the products page when the action originated there,
+     * otherwise fall back to the categories index.
+     */
+    private function redirectAfter(Request $request)
+    {
+        if ($request->input('redirect') === 'products') {
+            return redirect()->route('products.index');
+        }
+
+        return redirect()->route('categories.index');
     }
 }

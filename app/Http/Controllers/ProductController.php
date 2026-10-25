@@ -10,6 +10,7 @@ use App\Models\Unit;
 use App\Services\StockService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -36,7 +37,7 @@ class ProductController extends Controller
         }
 
         $products = $query->latest()->paginate(15)->withQueryString();
-        $categories = Category::where('business_id', $businessId)->get();
+        $categories = Category::where('business_id', $businessId)->withCount('products')->get();
         $units = Unit::where('business_id', $businessId)->get();
 
         return view('products.index', compact('products', 'categories', 'units', 'search', 'filter'));
@@ -57,6 +58,11 @@ class ProductController extends Controller
             $businessId = auth()->user()->business_id;
             $userId = auth()->id();
 
+            $imagePath = null;
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('products', 'public');
+            }
+
             $product = Product::create([
                 'business_id' => $businessId,
                 'category_id' => $request->category_id,
@@ -68,6 +74,7 @@ class ProductController extends Controller
                 'purchase_price' => $request->purchase_price,
                 'selling_price' => $request->selling_price,
                 'is_active' => $request->boolean('is_active', true),
+                'image' => $imagePath,
             ]);
 
             $initialStock = (int) $request->input('stock', 0);
@@ -104,17 +111,30 @@ class ProductController extends Controller
         $this->authorize('update', $product);
 
         return DB::transaction(function () use ($request, $product) {
-            $product->update([
+            $data = [
                 'name' => $request->name,
                 'category_id' => $request->category_id,
-                'unit_id' => $request->unit_id,
+                'unit_id' => $request->unit_id ?: $product->unit_id,
                 'sku' => $request->sku,
                 'barcode' => $request->barcode,
                 'description' => $request->description,
                 'purchase_price' => $request->purchase_price,
                 'selling_price' => $request->selling_price,
                 'is_active' => $request->boolean('is_active'),
-            ]);
+            ];
+
+            if ($request->has('stock') && $request->stock !== null) {
+                $data['stock'] = $request->stock;
+            }
+
+            if ($request->hasFile('image')) {
+                if ($product->image && Storage::disk('public')->exists($product->image)) {
+                    Storage::disk('public')->delete($product->image);
+                }
+                $data['image'] = $request->file('image')->store('products', 'public');
+            }
+
+            $product->update($data);
 
             return redirect()->route('products.index')
                 ->with('success', 'Product updated successfully.');

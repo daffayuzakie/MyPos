@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <div class="container mx-auto py-8">
@@ -65,7 +65,7 @@
 
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-500">Note</label>
-                            <div class="mt-1">{{ $stockMovement->note ?? '—' }}</div>
+                            <div class="mt-1">{{ $stockMovement->note ?? 'â€”' }}</div>
                         </div>
 
                         <div>
@@ -100,3 +100,4 @@
     </div>
 </div>
 @endsection
+

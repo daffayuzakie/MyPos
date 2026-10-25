@@ -1,4 +1,4 @@
-@props([
+﻿@props([
     'action' => null,
     'placeholder' => 'Cari...',
     'name' => 'search',
@@ -18,3 +18,5 @@
            class="w-full pl-9 pr-4 py-2 bg-gray-50 hover:bg-gray-100/60 focus:bg-white border border-gray-200 rounded-xl text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-700 focus:border-teal-700 shadow-2xs transition-all"
            placeholder="{{ $placeholder }}">
 </form>
+
+

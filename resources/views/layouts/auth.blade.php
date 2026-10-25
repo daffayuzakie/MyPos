@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
@@ -6,6 +6,9 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>@yield('title', config('app.name', 'Kasir POS'))</title>
+
+        <link rel="icon" type="image/png" href="{{ Storage::url('logo mypos.png') }}">
+        <link rel="apple-touch-icon" href="{{ Storage::url('logo mypos.png') }}">
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
@@ -26,7 +29,7 @@
                         Kelola toko &amp; kasir dalam satu aplikasi.
                     </h2>
                     <p class="mt-4 text-teal-100 leading-relaxed">
-                        Catat penjualan, pantau stok, dan lihat laporan real-time — kapan saja, di mana saja.
+                        Catat penjualan, pantau stok, dan lihat laporan real-time â€” kapan saja, di mana saja.
                     </p>
 
                     <ul class="mt-8 space-y-4 text-sm">
@@ -67,3 +70,5 @@
         </div>
     </body>
 </html>
+
+

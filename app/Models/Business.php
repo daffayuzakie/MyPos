@@ -71,16 +71,6 @@ class Business extends Model
         return $this->hasMany(Product::class);
     }
 
-    public function suppliers()
-    {
-        return $this->hasMany(Supplier::class);
-    }
-
-    public function purchases()
-    {
-        return $this->hasMany(Purchase::class);
-    }
-
     public function sales()
     {
         return $this->hasMany(Sale::class);

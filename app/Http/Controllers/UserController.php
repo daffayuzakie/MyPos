@@ -75,7 +75,7 @@ class UserController extends Controller
             'name' => $request->input('name'),
             'email' => $email,
             'password' => Hash::make($request->input('password') ?? 'password123'),
-            'pin' => $request->filled('pin') ? Hash::make($request->input('pin')) : null,
+            'pin' => $request->filled('pin') ? $request->input('pin') : null,
             'business_id' => $businessId,
             'branch_id' => $branchId,
             'status' => 'active',
@@ -98,6 +98,60 @@ class UserController extends Controller
         $user->update(['status' => 'active']);
 
         return redirect()->route('users.index')->with('status', 'Karyawan berhasil diaktifkan.');
+    }
+
+    /**
+     * Update the specified user/employee.
+     */
+    public function update(Request $request, User $user): RedirectResponse
+    {
+        if ($user->business_id !== auth()->user()->business_id) {
+            abort(403);
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'contact' => 'required|string|max:255',
+            'role' => 'required|string|in:admin,kasir,manajer',
+            'branch_id' => 'nullable|integer',
+            'pin' => 'nullable|string|min:4|max:6',
+            'password' => 'nullable|string|min:6',
+        ]);
+
+        $contact = $request->input('contact');
+        $email = filter_var($contact, FILTER_VALIDATE_EMAIL) ? $contact : $user->email;
+
+        if (filter_var($contact, FILTER_VALIDATE_EMAIL)) {
+            $exists = User::where('email', $email)->where('id', '!=', $user->id)->exists();
+            if ($exists) {
+                return back()->withErrors(['contact' => 'Email ini sudah digunakan akun lain.'])->withInput();
+            }
+        }
+
+        $data = [
+            'name' => $request->input('name'),
+            'email' => $email,
+            'branch_id' => $request->input('branch_id') ?: null,
+        ];
+
+        if ($request->filled('pin')) {
+            $data['pin'] = $request->input('pin');
+        }
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->input('password'));
+        }
+
+        if ($request->has('is_active') && $user->id !== auth()->id()) {
+            $data['status'] = $request->boolean('is_active') ? 'active' : 'inactive';
+        }
+
+        $user->update($data);
+
+        $roleName = $request->input('role');
+        $role = Role::firstOrCreate(['name' => $roleName, 'guard_name' => 'web']);
+        $user->syncRoles([$role]);
+
+        return redirect()->route('users.index')->with('status', 'Data karyawan berhasil diperbarui.');
     }
 
     /**

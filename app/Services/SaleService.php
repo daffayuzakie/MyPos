@@ -223,7 +223,7 @@ class SaleService
                 'amount' => $amounts['total_amount'],
                 'status' => 'pending',
                 'metadata' => [
-                    'snap_order_id' => $invoiceNumber,
+                    'snap_order_id' => $sale->midtransOrderId(),
                 ],
             ]);
 
@@ -336,6 +336,11 @@ class SaleService
 
         $prefix = $business->invoice_prefix ?? 'INV';
         $sequence = $business->invoice_sequence ?? 1;
+
+        // Ensure the sequence is never duplicate
+        while (Sale::where('business_id', $businessId)->where('invoice_number', "{$prefix}-{$sequence}")->exists()) {
+            $sequence++;
+        }
 
         $invoiceNumber = "{$prefix}-{$sequence}";
 

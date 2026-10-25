@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('topbar-search')
     <form method="GET" action="{{ route('stock.index') }}" class="flex items-center gap-2 w-full">
@@ -116,3 +116,4 @@
     </div>
 </div>
 @endsection
+

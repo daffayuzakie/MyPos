@@ -1,4 +1,4 @@
-<x-guest-layout>
+﻿<x-guest-layout>
     <div class="py-2">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
             {{ __('Siapkan Usaha Anda') }}
@@ -172,3 +172,5 @@
         </div>
     </div>
 </x-guest-layout>
+
+

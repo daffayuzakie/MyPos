@@ -953,10 +953,49 @@ class BusinessIsolationTest extends TestCase
         $this->assertEquals(10, $this->businessA->tax_percentage);
     }
 
+    public function test_admin_can_change_business_code(): void
+    {
+        $this->actingAs($this->adminA);
+
+        $response = $this->put(route('business.settings.update'), [
+            'name' => $this->businessA->name,
+            'slug' => 'kode-baru-123',
+            'email' => $this->businessA->email,
+        ]);
+
+        $response->assertRedirect(route('business.settings'));
+        $this->assertEquals('kode-baru-123', $this->businessA->fresh()->slug);
+    }
+
+    public function test_business_code_must_be_a_valid_slug(): void
+    {
+        $this->actingAs($this->adminA);
+
+        $response = $this->put(route('business.settings.update'), [
+            'name' => $this->businessA->name,
+            'slug' => 'Invalid Slug!',
+            'email' => $this->businessA->email,
+        ]);
+
+        $response->assertSessionHasErrors('slug');
+    }
+
+    public function test_business_code_must_be_unique(): void
+    {
+        $this->actingAs($this->adminA);
+
+        $response = $this->put(route('business.settings.update'), [
+            'name' => $this->businessA->name,
+            'slug' => $this->businessB->slug,
+            'email' => $this->businessA->email,
+        ]);
+
+        $response->assertSessionHasErrors('slug');
+    }
+
     public function test_admin_can_upload_business_logo(): void
     {
         Storage::fake('public');
-
         $this->actingAs($this->adminA);
 
         $response = $this->put(route('business.settings.update'), [
@@ -981,6 +1020,26 @@ class BusinessIsolationTest extends TestCase
         $response = $this->get(route('business.settings'));
 
         $response->assertStatus(403);
+    }
+
+    public function test_kasir_sidebar_hides_employee_and_settings_links(): void
+    {
+        $this->actingAs($this->kasirA);
+
+        $this->get(route('dashboard'))
+            ->assertOk()
+            ->assertDontSee('Karyawan')
+            ->assertDontSee('Pengaturan');
+    }
+
+    public function test_admin_sidebar_shows_employee_and_settings_links(): void
+    {
+        $this->actingAs($this->adminA);
+
+        $this->get(route('dashboard'))
+            ->assertOk()
+            ->assertSee('Karyawan')
+            ->assertSee('Pengaturan');
     }
 
     public function test_business_a_admin_cannot_access_business_b_settings(): void

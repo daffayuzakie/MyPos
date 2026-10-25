@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('business_id');
-            $table->unsignedBigInteger('supplier_id');
+            $table->unsignedBigInteger('supplier_id')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->string('invoice_number')->unique();
             $table->decimal('total_amount', 15, 2);

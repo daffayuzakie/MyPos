@@ -1,4 +1,4 @@
-@extends('layouts.pos')
+﻿@extends('layouts.pos')
 
 @section('topbar-search')
     <x-topbar-search :action="route('categories.index')" placeholder="Cari kategori..." />
@@ -24,4 +24,6 @@
     </div>
 </div>
 @endsection
+
+
 

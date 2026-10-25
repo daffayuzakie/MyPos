@@ -36,12 +36,14 @@ class UpdateProductRequest extends FormRequest
                 Rule::exists('categories', 'id')->where('business_id', $businessId)->where('is_active', true),
             ],
             'unit_id' => [
-                'required',
+                'nullable',
                 Rule::exists('units', 'id')->where('business_id', $businessId)->where('is_active', true),
             ],
             'purchase_price' => ['required', 'numeric', 'min:0'],
             'selling_price' => ['required', 'numeric', 'min:0'],
+            'stock' => ['nullable', 'numeric', 'min:0'],
             'is_active' => ['boolean'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
         ];
     }
 

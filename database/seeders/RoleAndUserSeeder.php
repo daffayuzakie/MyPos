@@ -17,6 +17,7 @@ class RoleAndUserSeeder extends Seeder
         // 1. Buat Permission (hanya jika belum ada)
         $permissionNames = [
             'products view', 'products create', 'products edit', 'products delete',
+            'categories view', 'categories create', 'categories edit', 'categories delete',
             'sales view-all', 'sales view-own', 'sales create', 'sales cancel',
             'purchases view', 'purchases create', 'purchases edit',
             'users view', 'users create', 'users edit', 'users deactivate',
@@ -40,6 +41,7 @@ class RoleAndUserSeeder extends Seeder
 
         $managerPermissions = [
             'products view', 'products create', 'products edit', 'products delete',
+            'categories view', 'categories create', 'categories edit', 'categories delete',
             'sales view-all', 'sales view-own', 'sales create', 'sales cancel',
             'purchases view', 'purchases create', 'purchases edit',
             'users view',
@@ -111,7 +113,7 @@ class RoleAndUserSeeder extends Seeder
                 'status' => 'active',
             ]
         );
-        $admin->update(['pin' => Hash::make('1234')]);
+        $admin->update(['pin' => '1234']);
         $admin->assignRole('admin');
 
         // 5. Buat Akun Kasir Default dengan business_id
@@ -120,13 +122,13 @@ class RoleAndUserSeeder extends Seeder
             [
                 'name' => 'Kasir Pertama',
                 'password' => Hash::make('password123'),
-                'pin' => Hash::make('1234'),
+                'pin' => '1234',
                 'business_id' => $business->id,
                 'branch_id' => $primaryBranch->id,
                 'status' => 'active',
             ]
         );
-        $kasir->update(['pin' => Hash::make('1234')]);
+        $kasir->update(['pin' => '1234']);
         $kasir->assignRole('kasir');
     }
 }

@@ -452,6 +452,114 @@ class SaleTest extends TestCase
         $this->assertEquals(2, Sale::count());
     }
 
+    public function test_invoice_number_can_repeat_across_different_businesses()
+    {
+        // First business: first sale -> INV-1
+        $this->actingAs($this->kasir);
+
+        $response1 = $this->postJson(route('pos.checkout'), [
+            'items' => [['product_id' => $this->product->id, 'quantity' => 1]],
+            'received_cash' => 100000,
+        ]);
+        $response1->assertStatus(200);
+        $this->assertEquals('INV-1', $response1->json('sale.invoice_number'));
+
+        // Second business with the same prefix/sequence -> also INV-1 (must not collide)
+        $otherBusiness = Business::factory()->create([
+            'invoice_prefix' => 'INV',
+            'invoice_sequence' => 1,
+            'tax_percentage' => 0,
+        ]);
+
+        $otherKasir = User::factory()->create([
+            'business_id' => $otherBusiness->id,
+            'status' => 'active',
+        ]);
+        $otherKasir->assignRole('kasir');
+
+        $otherProduct = Product::factory()->create([
+            'business_id' => $otherBusiness->id,
+            'selling_price' => 10000,
+            'stock' => 10,
+        ]);
+
+        $this->actingAs($otherKasir);
+
+        $response2 = $this->postJson(route('pos.checkout'), [
+            'items' => [['product_id' => $otherProduct->id, 'quantity' => 1]],
+            'received_cash' => 100000,
+        ]);
+
+        $response2->assertStatus(200);
+        $this->assertEquals('INV-1', $response2->json('sale.invoice_number'));
+
+        $this->assertEquals(2, Sale::count());
+        $this->assertEquals('INV-1', Sale::where('business_id', $this->business->id)->first()->invoice_number);
+        $this->assertEquals('INV-1', Sale::where('business_id', $otherBusiness->id)->first()->invoice_number);
+    }
+
+    // =========================================================================
+    // MIDTRANS WEBHOOK RESOLUTION
+    // =========================================================================
+
+    public function test_midtrans_webhook_resolves_only_the_matching_business_order()
+    {
+        config(['midtrans.server_key' => 'test-server-key']);
+
+        // Two pending sales sharing the same per-business invoice number.
+        $saleA = Sale::factory()->create([
+            'business_id' => $this->business->id,
+            'user_id' => $this->kasir->id,
+            'invoice_number' => 'INV-1',
+            'status' => 'pending',
+        ]);
+        $paymentA = Payment::create([
+            'business_id' => $this->business->id,
+            'sale_id' => $saleA->id,
+            'method' => 'midtrans',
+            'provider' => 'midtrans',
+            'amount' => 100,
+            'status' => 'pending',
+            'metadata' => ['snap_order_id' => $saleA->midtransOrderId()],
+        ]);
+
+        $otherBusiness = Business::factory()->create(['invoice_prefix' => 'INV', 'invoice_sequence' => 1]);
+        $otherUser = User::factory()->create(['business_id' => $otherBusiness->id]);
+        $saleB = Sale::factory()->create([
+            'business_id' => $otherBusiness->id,
+            'user_id' => $otherUser->id,
+            'invoice_number' => 'INV-1',
+            'status' => 'pending',
+        ]);
+        $paymentB = Payment::create([
+            'business_id' => $otherBusiness->id,
+            'sale_id' => $saleB->id,
+            'method' => 'midtrans',
+            'provider' => 'midtrans',
+            'amount' => 100,
+            'status' => 'pending',
+            'metadata' => ['snap_order_id' => $saleB->midtransOrderId()],
+        ]);
+
+        $this->assertNotEquals($saleA->midtransOrderId(), $saleB->midtransOrderId());
+
+        $orderId = $saleB->midtransOrderId();
+        $payload = [
+            'order_id' => $orderId,
+            'status_code' => '200',
+            'gross_amount' => '100.00',
+            'transaction_status' => 'settlement',
+            'fraud_status' => 'accept',
+        ];
+        $payload['signature_key'] = hash('sha512', $orderId.'200'.'100.00'.'test-server-key');
+
+        $response = $this->postJson(route('midtrans.webhook'), $payload);
+        $response->assertStatus(200);
+
+        $this->assertEquals('paid', $paymentB->fresh()->status);
+        $this->assertEquals('pending', $paymentA->fresh()->status);
+    }
+
     // =========================================================================
     // BUSINESS ISOLATION
     // =========================================================================

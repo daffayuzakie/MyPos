@@ -1,6 +1,6 @@
-@extends('layouts.auth')
+﻿@extends('layouts.auth')
 
-@section('title', 'Daftar Usaha — KasirPOS')
+@section('title', 'Daftar Usaha â€” KasirPOS')
 
 @section('auth-alt')
     <span class="text-gray-500">Sudah punya akun?</span>
@@ -68,3 +68,5 @@
         Dengan mendaftar, Anda menyetujui Syarat &amp; Ketentuan serta Kebijakan Privasi kami.
     </p>
 @endsection
+
+

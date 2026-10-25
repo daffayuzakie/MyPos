@@ -32,13 +32,18 @@ Route::post('/register-business', [BusinessController::class, 'register'])->name
 // Midtrans webhook (unauthenticated, signature verified)
 Route::post('/midtrans/webhook', [MidtransController::class, 'notification'])->name('midtrans.webhook');
 
+// Kasir PIN Login (public, rate limited)
+Route::middleware('throttle:6,1')->group(function () {
+    Route::get('/pin-login', [PinLoginController::class, 'show'])->name('pin.login');
+    Route::post('/pin-login', [PinLoginController::class, 'login'])->name('pin.login.submit');
+});
+
 Route::middleware('auth')->group(function () {
     // Kasir (POS) - Primary Main Interface
     Route::middleware('can:sales create')->group(function () {
         Route::get('/pos', [PosController::class, 'index'])->name('pos.index');
         Route::get('/sales/pos', [PosController::class, 'index'])->name('sales.pos');
         Route::get('/pos/search-products', [PosController::class, 'searchProducts'])->name('pos.search-products');
-        Route::get('/pos/categories', [PosController::class, 'getCategories'])->name('pos.categories');
         Route::post('/pos/checkout', [PosController::class, 'checkout'])->name('pos.checkout');
         Route::post('/pos/hold', [PosController::class, 'holdTransaction'])->name('pos.hold');
         Route::get('/pos/held', [PosController::class, 'getHeldTransactions'])->name('pos.held');
@@ -105,26 +110,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/customers/{customer}', [CustomerController::class, 'show'])->name('customers.show');
     });
 
-    // Supplier & Pembelian (Image 2)
-    Route::middleware('can:purchases view')->group(function () {
-        Route::get('/purchases', [PurchaseController::class, 'index'])->name('purchases.index');
-        Route::get('/purchases/{purchase}', [PurchaseController::class, 'show'])->name('purchases.show');
-    });
-    Route::middleware('can:purchases create')->group(function () {
-        Route::post('/purchases', [PurchaseController::class, 'store'])->name('purchases.store');
-        Route::post('/purchases/supplier', [PurchaseController::class, 'storeSupplier'])->name('suppliers.store');
-        Route::post('/purchases/{purchase}/items', [PurchaseItemController::class, 'store'])->name('purchases.items.store');
-        Route::delete('/purchases/{purchase}/items/{item}', [PurchaseItemController::class, 'destroy'])->name('purchases.items.destroy');
-        Route::post('/purchases/{purchase}/complete', [PurchaseController::class, 'complete'])->name('purchases.complete');
-    });
-    Route::middleware('can:purchases edit')->group(function () {
-        Route::put('/purchases/{purchase}', [PurchaseController::class, 'update'])->name('purchases.update');
-    });
-
     // Karyawan & Hak Akses (Image 5)
     Route::middleware('can:users view')->group(function () {
         Route::get('/users', [UserController::class, 'index'])->name('users.index');
         Route::post('/users', [UserController::class, 'store'])->name('users.store');
+        Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
         Route::post('/users/{user}/activate', [UserController::class, 'activate'])->name('users.activate');
         Route::post('/users/{user}/deactivate', [UserController::class, 'deactivate'])->name('users.deactivate');
     });
@@ -154,10 +144,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/refunds/search', [RefundController::class, 'searchSale'])->name('refunds.search');
         Route::post('/refunds', [RefundController::class, 'process'])->name('refunds.process');
     });
-
-    // PIN Login
-    Route::get('/pin-login', [PinLoginController::class, 'show'])->name('pin.login');
-    Route::post('/pin-login', [PinLoginController::class, 'login'])->name('pin.login.submit');
 
     // Dashboard Overview
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

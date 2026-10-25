@@ -1,6 +1,6 @@
-@extends('layouts.auth')
+﻿@extends('layouts.auth')
 
-@section('title', 'Masuk — KasirPOS')
+@section('title', 'Masuk â€” KasirPOS')
 
 @section('auth-alt')
     <span class="text-gray-500">Belum punya akun?</span>
@@ -57,4 +57,12 @@
             Masuk
         </button>
     </form>
+
+    <div class="mt-6 text-center">
+        <a href="{{ route('pin.login') }}" class="text-sm font-semibold text-teal-700 hover:text-teal-800">
+            Masuk sebagai kasir dengan PIN
+        </a>
+    </div>
 @endsection
+
+

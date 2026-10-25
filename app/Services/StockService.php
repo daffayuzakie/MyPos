@@ -7,7 +7,6 @@ use App\Exceptions\NegativeStockException;
 use App\Models\Product;
 use App\Models\StockMovement;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class StockService
 {
@@ -64,24 +63,11 @@ class StockService
             ->lockForUpdate()
             ->firstOrFail();
 
-        Log::info('Stock IN - Before update', [
-            'product_id' => $productId,
-            'stock_before' => $product->stock,
-            'quantity' => $quantity,
-        ]);
-
         $stockBefore = $product->stock;
         $stockAfter = $stockBefore + $quantity;
 
         $product->stock = $stockAfter;
         $product->save();
-
-        Log::info('Stock IN - After update', [
-            'product_id' => $productId,
-            'stock_before' => $stockBefore,
-            'stock_after' => $stockAfter,
-            'updated' => true,
-        ]);
 
         return $this->movementModel->create([
             'business_id' => $businessId,

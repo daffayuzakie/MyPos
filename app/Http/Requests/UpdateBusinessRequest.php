@@ -18,7 +18,7 @@ class UpdateBusinessRequest extends FormRequest
 
         return [
             'name' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', 'max:255', Rule::unique('businesses', 'slug')->ignore($businessId)],
+            'slug' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/', Rule::unique('businesses', 'slug')->ignore($businessId)],
             'email' => ['nullable', 'email', 'max:255', Rule::unique('businesses', 'email')->ignore($businessId)],
             'phone' => ['nullable', 'string', 'max:50'],
             'address' => ['nullable', 'string'],

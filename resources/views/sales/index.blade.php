@@ -1,4 +1,4 @@
-@extends('layouts.pos')
+﻿@extends('layouts.pos')
 
 @section('topbar-search')
     <x-topbar-search :action="route('sales.index')" placeholder="Cari No. Nota..." />
@@ -8,8 +8,8 @@
 <div class="p-6" x-data="salesHistory()">
     <div class="flex justify-between items-start mb-6">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900">Riwayat Transaksi</h1>
-            <p class="text-gray-500 text-sm">Lihat, cetak ulang struk, dan proses retur pesanan kasir</p>
+            <h1 class="text-2xl font-bold text-[#1D3B47]">Riwayat Transaksi</h1>
+            <p class="text-[#75929E] text-sm">Lihat, cetak ulang struk, dan proses retur pesanan kasir</p>
         </div>
         <div>
             <a href="{{ route('pos.index') }}" class="pos-btn-primary text-xs flex items-center gap-1.5 bg-[#0d6e53] hover:bg-[#095741]">
@@ -31,32 +31,32 @@
         <div class="p-4 border-b border-gray-200 bg-gray-50 flex flex-wrap gap-4 items-center justify-between">
             <div class="flex gap-2">
                 <a href="?status={{ $search ? '&search=' . urlencode($search) : '' }}" 
-                   class="px-4 py-2 rounded-full text-xs font-bold transition-colors {{ empty($status) ? 'bg-gray-900 text-white' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200' }}">
+                   class="px-4 py-2 rounded-full text-xs font-bold transition-colors {{ empty($status) ? 'bg-[#4D869C] text-white' : 'bg-white text-[#1D3B47] hover:bg-gray-100 border border-gray-200' }}">
                     Semua
                 </a>
                 <a href="?status=completed{{ $search ? '&search=' . urlencode($search) : '' }}" 
-                   class="px-4 py-2 rounded-full text-xs font-bold transition-colors {{ ($status ?? '') === 'completed' ? 'bg-[#0d6e53] text-white' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200' }}">
+                   class="px-4 py-2 rounded-full text-xs font-bold transition-colors {{ ($status ?? '') === 'completed' ? 'bg-[#0d6e53] text-white' : 'bg-white text-[#1D3B47] hover:bg-gray-100 border border-gray-200' }}">
                     Selesai
                 </a>
                 <a href="?status=refunded{{ $search ? '&search=' . urlencode($search) : '' }}" 
-                   class="px-4 py-2 rounded-full text-xs font-bold transition-colors {{ ($status ?? '') === 'refunded' ? 'bg-rose-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200' }}">
+                   class="px-4 py-2 rounded-full text-xs font-bold transition-colors {{ ($status ?? '') === 'refunded' ? 'bg-rose-600 text-white' : 'bg-white text-[#1D3B47] hover:bg-gray-100 border border-gray-200' }}">
                     Diretur
                 </a>
             </div>
             
             <form method="GET" class="flex flex-wrap gap-2.5 items-center">
                 <input type="hidden" name="status" value="{{ $status ?? '' }}">
-                <input type="date" name="date_from" value="{{ $dateFrom ?? '' }}" class="border border-gray-300 rounded-xl text-xs px-3 py-1.5 focus:ring-teal-700 focus:border-teal-700 bg-white" title="Dari Tanggal">
+                <input type="date" name="date_from" value="{{ $dateFrom ?? '' }}" class="border border-[#D6E5ED] rounded-xl text-xs px-3 py-1.5 focus:ring-teal-700 focus:border-teal-700 bg-white" title="Dari Tanggal">
                 <span class="text-xs text-gray-400">-</span>
-                <input type="date" name="date_to" value="{{ $dateTo ?? '' }}" class="border border-gray-300 rounded-xl text-xs px-3 py-1.5 focus:ring-teal-700 focus:border-teal-700 bg-white" title="Sampai Tanggal">
-                <button type="submit" class="px-3 py-1.5 bg-gray-800 hover:bg-gray-900 text-white text-xs font-bold rounded-xl">Filter</button>
+                <input type="date" name="date_to" value="{{ $dateTo ?? '' }}" class="border border-[#D6E5ED] rounded-xl text-xs px-3 py-1.5 focus:ring-teal-700 focus:border-teal-700 bg-white" title="Sampai Tanggal">
+                <button type="submit" class="px-3 py-1.5 bg-[#3D6B7D] hover:bg-[#4D869C] text-white text-xs font-bold rounded-xl">Filter</button>
             </form>
         </div>
 
         <!-- Sales Table -->
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs text-gray-600">
-                <thead class="text-[11px] text-gray-500 uppercase bg-gray-50 border-b border-gray-200 font-bold">
+            <table class="w-full text-left text-xs text-[#75929E]">
+                <thead class="text-[11px] text-[#75929E] uppercase bg-gray-50 border-b border-gray-200 font-bold">
                     <tr>
                         <th scope="col" class="px-5 py-3.5">No. Nota</th>
                         <th scope="col" class="px-5 py-3.5">Waktu Transaksi</th>
@@ -71,13 +71,13 @@
                 <tbody class="divide-y divide-gray-100">
                     @forelse($sales ?? [] as $sale)
                     <tr class="bg-white hover:bg-gray-50/80 transition-colors">
-                        <td class="px-5 py-3.5 font-bold font-mono text-gray-900">{{ $sale->invoice_number }}</td>
+                        <td class="px-5 py-3.5 font-bold font-mono text-[#1D3B47]">{{ $sale->invoice_number }}</td>
                         <td class="px-5 py-3.5">{{ $sale->transaction_date ? \Carbon\Carbon::parse($sale->transaction_date)->format('d M Y, H:i') : $sale->created_at->format('d M Y, H:i') }}</td>
                         <td class="px-5 py-3.5">{{ $sale->user->name ?? '-' }}</td>
-                        <td class="px-5 py-3.5 font-medium text-gray-800">{{ $sale->customer->name ?? 'Pelanggan Umum' }}</td>
+                        <td class="px-5 py-3.5 font-medium text-[#1D3B47]">{{ $sale->customer->name ?? 'Pelanggan Umum' }}</td>
                         <td class="px-5 py-3.5 font-extrabold text-gray-950">Rp {{ number_format($sale->total_amount, 0, ',', '.') }}</td>
                         <td class="px-5 py-3.5">
-                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-gray-100 text-gray-800">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-gray-100 text-[#1D3B47]">
                                 {{ $sale->payment_method ?? 'cash' }}
                             </span>
                         </td>
@@ -89,14 +89,14 @@
                             @elseif($sale->status == 'refunded')
                                 <span class="bg-rose-50 text-rose-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-rose-200">Diretur</span>
                             @elseif($sale->status == 'cancelled')
-                                <span class="bg-gray-100 text-gray-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-gray-200">Dibatalkan</span>
+                                <span class="bg-gray-100 text-[#1D3B47] text-[10px] font-bold px-2 py-0.5 rounded-full border border-gray-200">Dibatalkan</span>
                             @else
-                                <span class="bg-gray-100 text-gray-700 text-[10px] font-bold px-2 py-0.5 rounded-full">{{ ucfirst($sale->status) }}</span>
+                                <span class="bg-gray-100 text-[#1D3B47] text-[10px] font-bold px-2 py-0.5 rounded-full">{{ ucfirst($sale->status) }}</span>
                             @endif
                         </td>
                         <td class="px-5 py-3.5 text-right space-x-2">
                             <button @click="showDetail({{ json_encode($sale) }})" class="text-teal-700 hover:text-teal-900 font-bold text-xs">Detail</button>
-                            <button @click="printInvoice({{ json_encode($sale) }})" class="text-gray-600 hover:text-gray-900 font-bold text-xs">Cetak</button>
+                            <button @click="printInvoice({{ json_encode($sale) }})" class="text-[#75929E] hover:text-[#1D3B47] font-bold text-xs">Cetak</button>
                             @if($sale->status == 'completed')
                             <button @click="openRefundModal({{ json_encode($sale) }})" class="text-rose-600 hover:text-rose-800 font-bold text-xs">Retur</button>
                             @endif
@@ -120,86 +120,154 @@
         @endif
     </div>
 
-    <!-- MODAL DETAIL TRANSAKSI -->
-    <div x-show="selectedSale" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-        <div @click.away="selectedSale = null" class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden p-6 space-y-4">
-            <div class="flex justify-between items-center border-b pb-3">
+    <!-- ========================================== -->
+    <!-- MODAL DETAIL TRANSAKSI                     -->
+    <!-- Matching Popup Design                      -->
+    <!-- ========================================== -->
+    <div x-show="selectedSale" x-cloak class="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-xs p-0 sm:p-4">
+        <div @click.away="selectedSale = null"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95"
+             class="bg-white rounded-t-[32px] sm:rounded-[32px] p-6 sm:p-8 max-w-lg w-full relative shadow-2xl overflow-hidden flex flex-col justify-between max-h-[92vh]">
+            
+            <!-- Mobile Top Handle Bar -->
+            <div class="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-3 sm:hidden shrink-0"></div>
+
+            <div class="flex items-center justify-between mb-4 shrink-0">
                 <div>
-                    <h3 class="font-extrabold text-sm text-gray-900" x-text="'Nota ' + selectedSale?.invoice_number"></h3>
-                    <p class="text-[11px] text-gray-500" x-text="selectedSale?.transaction_date || selectedSale?.created_at"></p>
+                    <h3 class="text-lg sm:text-xl font-black text-[#1D3B47]" x-text="'Nota ' + (selectedSale?.invoice_number || '')"></h3>
+                    <p class="text-xs text-[#75929E] font-medium" x-text="selectedSale?.transaction_date || selectedSale?.created_at || ''"></p>
                 </div>
-                <button @click="selectedSale = null" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+                <button type="button" @click="selectedSale = null" 
+                        class="w-9 h-9 bg-[#4D869C] hover:bg-[#3D6B7D] text-white rounded-full flex items-center justify-center shrink-0 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
             </div>
 
-            <!-- Items -->
-            <div class="max-h-56 overflow-y-auto divide-y divide-gray-100 text-xs">
-                <template x-for="item in (selectedSale?.items || [])" :key="item.id">
-                    <div class="py-2 flex justify-between items-center">
-                        <div>
-                            <div class="font-bold text-gray-900" x-text="item.product?.name || 'Produk'"></div>
-                            <div class="text-[10px] text-gray-400" x-text="item.quantity + ' x ' + formatPrice(item.unit_price)"></div>
+            <!-- Items & Breakdown -->
+            <div class="overflow-y-auto flex-1 space-y-3 pr-1">
+                <!-- Items List -->
+                <div class="space-y-2">
+                    <template x-for="item in (selectedSale?.items || [])" :key="item.id">
+                        <div class="p-3 bg-[#EEF7FF] rounded-2xl border border-[#D6E5ED] flex justify-between items-center text-xs">
+                            <div>
+                                <div class="font-bold text-[#1D3B47] text-sm" x-text="item.product?.name || 'Produk'"></div>
+                                <div class="text-[11px] text-[#75929E] mt-0.5" x-text="item.quantity + ' x ' + formatPrice(item.unit_price)"></div>
+                            </div>
+                            <div class="font-black text-[#1D3B47] text-sm" x-text="formatPrice(item.subtotal)"></div>
                         </div>
-                        <div class="font-bold text-gray-900" x-text="formatPrice(item.subtotal)"></div>
+                    </template>
+                </div>
+
+                <!-- Financial Breakdown -->
+                <div class="p-4 bg-[#EEF7FF] rounded-2xl border border-[#D6E5ED] space-y-2 text-xs">
+                    <div class="flex justify-between text-[#75929E] font-medium">
+                        <span>Subtotal</span>
+                        <span class="font-bold text-[#1D3B47]" x-text="formatPrice(selectedSale?.subtotal)"></span>
                     </div>
-                </template>
+                    <div class="flex justify-between text-[#d9383a] font-medium" x-show="selectedSale?.discount_amount > 0">
+                        <span>Diskon</span>
+                        <span class="font-bold" x-text="'- ' + formatPrice(selectedSale?.discount_amount)"></span>
+                    </div>
+                    <div class="flex justify-between text-[#75929E] font-medium">
+                        <span>PPN</span>
+                        <span class="font-bold text-[#1D3B47]" x-text="formatPrice(selectedSale?.tax_amount)"></span>
+                    </div>
+                    <div class="border-t border-[#D6E5ED] my-1.5"></div>
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="font-black text-[#1D3B47]">TOTAL</span>
+                        <span class="text-xl font-black text-[#1D3B47]" x-text="formatPrice(selectedSale?.total_amount)"></span>
+                    </div>
+                    <div class="flex justify-between items-center text-xs text-[#75929E] pt-1">
+                        <span>Metode pembayaran</span>
+                        <span class="font-bold uppercase text-[#1D3B47]" x-text="selectedSale?.payment_method"></span>
+                    </div>
+                </div>
             </div>
 
-            <div class="border-t pt-3 space-y-1.5 text-xs text-gray-600">
-                <div class="flex justify-between"><span>Subtotal:</span><span class="font-semibold text-gray-900" x-text="formatPrice(selectedSale?.subtotal)"></span></div>
-                <div class="flex justify-between text-rose-600" x-show="selectedSale?.discount_amount > 0">
-                    <span>Diskon:</span><span class="font-semibold" x-text="'- ' + formatPrice(selectedSale?.discount_amount)"></span>
-                </div>
-                <div class="flex justify-between"><span>PPN:</span><span class="font-semibold text-gray-900" x-text="formatPrice(selectedSale?.tax_amount)"></span></div>
-                <div class="flex justify-between pt-2 border-t font-black text-sm text-gray-950">
-                    <span>Total:</span><span x-text="formatPrice(selectedSale?.total_amount)"></span>
-                </div>
-                <div class="flex justify-between text-[11px]"><span>Metode Pembayaran:</span><span class="font-bold uppercase text-gray-800" x-text="selectedSale?.payment_method"></span></div>
-            </div>
-
-            <div class="pt-2 flex gap-2">
-                <button @click="printInvoice(selectedSale)" class="flex-1 py-2.5 bg-gray-900 hover:bg-black text-white rounded-xl text-xs font-bold">Cetak Struk</button>
-                <button @click="selectedSale = null" class="w-1/3 py-2.5 border border-gray-200 rounded-xl text-xs font-bold text-gray-700 hover:bg-gray-50">Tutup</button>
+            <!-- Footer Actions -->
+            <div class="flex items-center justify-between pt-5 mt-4 border-t border-[#D6E5ED] shrink-0">
+                <button type="button" @click="selectedSale = null" class="text-[#75929E] font-bold hover:text-black text-xs sm:text-sm transition-colors cursor-pointer">
+                    Tutup
+                </button>
+                <button type="button" @click="printInvoice(selectedSale)" 
+                        class="bg-[#4D869C] hover:bg-[#3D6B7D] text-white font-bold px-7 sm:px-8 py-3 rounded-full text-xs sm:text-sm shadow-sm transition-all flex items-center gap-2 cursor-pointer">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                    <span>Cetak struk</span>
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL RETUR TRANSAKSI -->
-    <div x-show="refundSale" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-        <div @click.away="refundSale = null" class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden p-6 space-y-4">
-            <div class="flex justify-between items-center border-b pb-3">
+    <!-- ========================================== -->
+    <!-- MODAL RETUR TRANSAKSI                      -->
+    <!-- Matching Popup Design                      -->
+    <!-- ========================================== -->
+    <div x-show="refundSale" x-cloak class="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-xs p-0 sm:p-4">
+        <div @click.away="refundSale = null"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95"
+             class="bg-white rounded-t-[32px] sm:rounded-[32px] p-6 sm:p-8 max-w-lg w-full relative shadow-2xl overflow-hidden flex flex-col justify-between max-h-[92vh]">
+            
+            <!-- Mobile Top Handle Bar -->
+            <div class="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-3 sm:hidden shrink-0"></div>
+
+            <div class="flex items-center justify-between mb-4 shrink-0">
                 <div>
-                    <h3 class="font-extrabold text-sm text-gray-900" x-text="'Proses Retur - ' + refundSale?.invoice_number"></h3>
-                    <p class="text-[11px] text-gray-500">Pilih item yang ingin dikembalikan ke stok</p>
+                    <h3 class="text-lg sm:text-xl font-black text-[#1D3B47]" x-text="'Proses retur #' + (refundSale?.invoice_number || '')"></h3>
+                    <p class="text-xs text-[#75929E] font-medium">Pilih item yang ingin dikembalikan ke stok</p>
                 </div>
-                <button @click="refundSale = null" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+                <button type="button" @click="refundSale = null" 
+                        class="w-9 h-9 bg-[#4D869C] hover:bg-[#3D6B7D] text-white rounded-full flex items-center justify-center shrink-0 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
             </div>
 
-            <div class="max-h-56 overflow-y-auto space-y-2 text-xs">
-                <template x-for="item in refundItems" :key="item.id">
-                    <div class="p-2.5 border rounded-xl flex items-center justify-between gap-2">
-                        <div class="flex items-center gap-2">
-                            <input type="checkbox" x-model="item.selected" class="rounded text-teal-700">
-                            <div>
-                                <div class="font-bold text-gray-900" x-text="item.name"></div>
-                                <div class="text-[10px] text-gray-500" x-text="formatPrice(item.unit_price)"></div>
+            <div class="space-y-4 overflow-y-auto flex-1 pr-1">
+                <!-- List Items Retur -->
+                <div class="space-y-2">
+                    <template x-for="item in refundItems" :key="item.id">
+                        <div class="p-3 bg-[#EEF7FF] border border-[#D6E5ED] rounded-2xl flex items-center justify-between gap-3">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <input type="checkbox" x-model="item.selected" class="w-4 h-4 text-white rounded border-gray-400 focus:ring-[#4D869C]">
+                                <div class="min-w-0">
+                                    <div class="font-bold text-[#1D3B47] text-xs sm:text-sm truncate" x-text="item.name"></div>
+                                    <div class="text-[11px] text-[#75929E] font-medium" x-text="formatPrice(item.unit_price)"></div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-1.5 shrink-0" x-show="item.selected">
+                                <span class="text-[11px] font-bold text-[#75929E]">Qty:</span>
+                                <input type="number" x-model.number="item.qty" :max="item.max_qty" min="1" 
+                                       class="w-16 px-2.5 py-1.5 bg-white border border-gray-400 rounded-xl text-center text-xs font-black text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
                             </div>
                         </div>
-                        <div class="flex items-center gap-1" x-show="item.selected">
-                            <span class="text-[11px] text-gray-500">Qty:</span>
-                            <input type="number" x-model.number="item.qty" :max="item.max_qty" min="1" class="w-16 px-2 py-1 border rounded-lg text-center font-bold">
-                        </div>
-                    </div>
-                </template>
+                    </template>
+                </div>
+
+                <!-- Input Alasan Retur -->
+                <div>
+                    <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">Alasan retur</label>
+                    <textarea x-model="refundReason" rows="2" 
+                              class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]" 
+                              placeholder="contoh: Barang rusak, pesanan salah..."></textarea>
+                </div>
             </div>
 
-            <div>
-                <label class="block text-xs font-bold text-gray-700 mb-1">Alasan Retur</label>
-                <textarea x-model="refundReason" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-xl text-xs" placeholder="contoh: Barang cacat, pesanan salah..."></textarea>
-            </div>
-
-            <div class="pt-2 flex gap-2">
-                <button @click="refundSale = null" class="w-1/3 py-2.5 border border-gray-200 rounded-xl text-xs font-bold text-gray-700 hover:bg-gray-50">Batal</button>
-                <button @click="submitRefund()" :disabled="isProcessingRefund" class="flex-1 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold">
+            <!-- Footer Actions -->
+            <div class="flex items-center justify-between pt-5 mt-4 border-t border-[#D6E5ED] shrink-0">
+                <button type="button" @click="refundSale = null" class="text-[#75929E] font-bold hover:text-black text-xs sm:text-sm transition-colors cursor-pointer">
+                    Batal
+                </button>
+                <button type="button" @click="submitRefund()" :disabled="isProcessingRefund" 
+                        class="bg-[#4D869C] hover:bg-[#3D6B7D] text-white font-bold px-7 sm:px-8 py-3 rounded-full text-xs sm:text-sm shadow-sm disabled:opacity-40 transition-all cursor-pointer">
                     <span x-show="!isProcessingRefund">Konfirmasi Retur</span>
                     <span x-show="isProcessingRefund">Memproses...</span>
                 </button>
@@ -216,6 +284,17 @@
             refundItems: [],
             refundReason: '',
             isProcessingRefund: false,
+
+            init() {
+                this.$watch('selectedSale', () => this.syncModal());
+                this.$watch('refundSale', () => this.syncModal());
+            },
+
+            syncModal() {
+                if (window.Alpine && Alpine.store('modal')) {
+                    Alpine.store('modal').open = Boolean(this.selectedSale || this.refundSale);
+                }
+            },
 
             showDetail(sale) {
                 this.selectedSale = sale;
@@ -333,3 +412,6 @@
     }
 </script>
 @endsection
+
+
+

@@ -9,3 +9,5 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('stock:reservations:expire')->everyMinute();
+
+Schedule::command('payments:reconcile-midtrans')->everyMinute();

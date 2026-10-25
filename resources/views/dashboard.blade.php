@@ -1,131 +1,204 @@
-@extends('layouts.pos')
+﻿@extends('layouts.pos')
 
 @section('content')
-<div class="p-6">
-    <div class="flex justify-between items-center mb-6">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
-            <p class="text-gray-500 text-sm">Selamat datang kembali, {{ auth()->user()->name }}</p>
+@php
+    $maxVal = 1;
+    if (!empty($chartData)) {
+        $maxVal = max(max($chartData), 1);
+    }
+
+    if (!function_exists('formatCompactIdr')) {
+        function formatCompactIdr($val) {
+            if ($val >= 1000000) {
+                $num = round($val / 1000000, 1);
+                return ((float)$num == (int)$num ? (int)$num : $num) . 'jt';
+            } elseif ($val >= 1000) {
+                return round($val / 1000) . 'rb';
+            } elseif ($val > 0) {
+                return number_format($val, 0, ',', '.');
+            }
+            return '';
+        }
+    }
+
+    $avatarColors = [
+        'bg-[#518e9a] text-white',
+        'bg-[#B6D9D5] text-[#1D3B47]',
+        'bg-[#406a77] text-white',
+        'bg-[#4D869C] text-white',
+        'bg-[#a3cbcf] text-[#1D3B47]',
+    ];
+@endphp
+
+<div class="space-y-5 md:space-y-6">
+
+    <!-- 4 Summary Metric Cards (2x2 on Mobile, 1x4 on Desktop) -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
+        
+        <!-- Card 1: Penjualan Hari Ini (Light Soft Mint #CDE8E5) -->
+        <div class="bg-[#CDE8E5] rounded-3xl p-5 md:p-6 shadow-xs flex flex-col justify-between min-h-[125px]">
+            <div class="text-[#1D3B47]/70 text-xs sm:text-sm font-semibold">Penjualan hari ini</div>
+            <div class="text-[#1D3B47] font-black text-xl sm:text-2xl lg:text-3xl xl:text-4xl tracking-tight mt-2">
+                Rp {{ number_format($todaySales ?? 0, 0, ',', '.') }}
+            </div>
         </div>
+
+        <!-- Card 2: Transaksi (Soft Ice-blue Card #EEF7FF) -->
+        <div class="bg-[#EEF7FF] rounded-3xl p-5 md:p-6 shadow-xs flex flex-col justify-between min-h-[125px]">
+            <div class="text-[#1D3B47]/70 text-xs sm:text-sm font-semibold">Transaksi</div>
+            <div class="text-[#1D3B47] font-black text-2xl sm:text-3xl lg:text-4xl tracking-tight mt-2">
+                {{ $todayTransactions ?? 0 }}
+            </div>
+        </div>
+
+        <!-- Card 3: Rata-rata (Soft Ice-blue Card #EEF7FF) -->
+        <div class="bg-[#EEF7FF] rounded-3xl p-5 md:p-6 shadow-xs flex flex-col justify-between min-h-[125px]">
+            <div class="text-[#1D3B47]/70 text-xs sm:text-sm font-semibold">Rata-rata</div>
+            <div class="text-[#1D3B47] font-black text-xl sm:text-2xl lg:text-3xl xl:text-4xl tracking-tight mt-2">
+                Rp {{ number_format($averageTransaction ?? 0, 0, ',', '.') }}
+            </div>
+        </div>
+
+        <!-- Card 4: Stok Rendah (Soft Ice-blue Card with Red #d9383a) -->
+        <div class="bg-[#EEF7FF] rounded-3xl p-5 md:p-6 shadow-xs flex flex-col justify-between min-h-[125px]">
+            <div class="text-[#1D3B47]/70 text-xs sm:text-sm font-semibold">Stok rendah</div>
+            <div class="text-[#d9383a] font-black text-2xl sm:text-3xl lg:text-4xl tracking-tight mt-2">
+                {{ $lowStockCount ?? 0 }}
+            </div>
+        </div>
+
     </div>
 
-    <!-- Summary Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="bg-teal-700 rounded-xl p-6 text-white shadow-sm">
-            <div class="text-teal-100 text-sm font-medium mb-1">Penjualan Hari Ini</div>
-            <div class="text-3xl font-bold">Rp {{ number_format($todaySales ?? 0, 0, ',', '.') }}</div>
-        </div>
-        <div class="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
-            <div class="text-gray-500 text-sm font-medium mb-1">Transaksi Hari Ini</div>
-            <div class="text-3xl font-bold text-gray-900">{{ $todayTransactions ?? 0 }}</div>
-        </div>
-        <div class="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
-            <div class="text-gray-500 text-sm font-medium mb-1">Rata-rata Transaksi</div>
-            <div class="text-3xl font-bold text-gray-900">Rp {{ number_format($averageTransaction ?? 0, 0, ',', '.') }}</div>
-        </div>
-        <div class="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
-            <div class="text-gray-500 text-sm font-medium mb-1">Produk Stok Rendah</div>
-            <div class="text-3xl font-bold {{ ($lowStockCount ?? 0) > 0 ? 'text-red-600' : 'text-gray-900' }}">{{ $lowStockCount ?? 0 }}</div>
-        </div>
-    </div>
+    <!-- Main Content Section: Left Chart & Right Stats -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 md:gap-6 items-start">
+        
+        <!-- Left Container: Bar Chart Card (7 hari terakhir) -->
+        <div class="lg:col-span-7 xl:col-span-8 bg-[#EEF7FF] rounded-3xl p-5 sm:p-6 md:p-8 shadow-xs flex flex-col justify-between min-h-[440px]">
+            
+            <!-- Card Header: Title & Period Filters -->
+            <div class="flex items-start justify-between gap-2 mb-6">
+                <div>
+                    <h3 class="font-black text-lg md:text-xl text-[#1D3B47] leading-tight tracking-tight">
+                        @if($period === 'today')
+                            Penjualan Hari Ini
+                        @elseif($period === 'month')
+                            Penjualan Bulan Ini
+                        @else
+                            <span class="sm:hidden">7 hari<br>terakhir</span>
+                            <span class="hidden sm:inline">7 hari terakhir</span>
+                            <span class="sr-only">Penjualan 7 Hari Terakhir</span>
+                        @endif
+                    </h3>
+                </div>
+                <div class="flex flex-wrap items-center justify-end gap-1 sm:gap-2 text-xs md:text-sm">
+                    <a href="{{ route('dashboard', ['period' => 'today']) }}" 
+                       class="{{ $period === 'today' ? 'bg-[#4D869C] text-white px-3.5 sm:px-4 py-1.5 rounded-full font-bold shadow-xs' : 'text-[#1D3B47] hover:text-black font-semibold px-2.5 sm:px-3 py-1.5 transition-colors' }}">
+                        Hari ini
+                    </a>
+                    <a href="{{ route('dashboard', ['period' => '7days']) }}" 
+                       class="{{ $period === '7days' ? 'bg-[#4D869C] text-white px-3.5 sm:px-4 py-1.5 rounded-full font-bold shadow-xs' : 'text-[#1D3B47] hover:text-black font-semibold px-2.5 sm:px-3 py-1.5 transition-colors' }}">
+                        7 hari
+                    </a>
+                    <a href="{{ route('dashboard', ['period' => 'month']) }}" 
+                       class="{{ $period === 'month' ? 'bg-[#4D869C] text-white px-3.5 sm:px-4 py-1.5 rounded-full font-bold shadow-xs' : 'text-[#1D3B47] hover:text-black font-semibold px-2.5 sm:px-3 py-1.5 transition-colors' }}">
+                        Bulan ini
+                    </a>
+                </div>
+            </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Chart -->
-        <div class="lg:col-span-2 pos-card">
-            <h3 class="text-lg font-bold text-gray-900 mb-4">Penjualan 7 Hari Terakhir</h3>
-            <canvas id="salesChart" height="100"></canvas>
+            <!-- Custom Modern Bar Chart Area (Matching Mockup with Rounded Capsules & Flat Pills) -->
+            <div class="w-full overflow-x-auto hide-scrollbar pt-6">
+                <div class="h-64 sm:h-72 flex items-end justify-between gap-2 sm:gap-4 px-1 sm:px-4 pb-2 {{ count($chartLabels) > 10 ? 'min-w-[680px]' : 'w-full' }}">
+                    @foreach($chartLabels as $index => $label)
+                        @php
+                            $val = (float)($chartData[$index] ?? 0);
+                            $shortLabel = explode(' ', $label)[0];
+                            // Height scales from min 48px to max 195px
+                            $heightPx = $val > 0 ? max(48, round(($val / $maxVal) * 195)) : 0;
+                            // Last day or current period day is active primary teal
+                            $isToday = ($loop->last && $period === '7days') || ($period === 'today' && $loop->last);
+                        @endphp
+                        <div class="flex flex-col items-center justify-end h-full flex-1 min-w-[32px]">
+                            @if($val > 0)
+                                <span class="text-[10px] sm:text-xs font-bold text-[#1D3B47] mb-2 truncate text-center tracking-tight">
+                                    {{ formatCompactIdr($val) }}
+                                </span>
+                                <div class="w-7 sm:w-10 md:w-12 rounded-2xl transition-all duration-300 {{ $isToday ? 'bg-[#4D869C]' : 'bg-[#B6D9D5]' }}"
+                                     style="height: {{ $heightPx }}px;"
+                                     title="{{ $label }}: Rp {{ number_format($val, 0, ',', '.') }}">
+                                </div>
+                            @else
+                                <div class="h-2 w-6 sm:w-8 bg-[#D6E5ED] rounded-full mx-auto my-1.5" title="{{ $label }}: Rp 0"></div>
+                            @endif
+                            <span class="text-xs {{ $isToday ? 'font-bold text-[#1D3B47]' : 'font-semibold text-[#75929E]' }} mt-3 truncate text-center">
+                                {{ $shortLabel }}
+                            </span>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+
         </div>
 
-        <!-- Right Column -->
-        <div class="space-y-6">
-            <!-- Top Products -->
-            <div class="pos-card">
-                <h3 class="text-lg font-bold text-gray-900 mb-4">Produk Terlaris</h3>
+        <!-- Right Container: Terlaris & Peringatan Stok -->
+        <div class="lg:col-span-5 xl:col-span-4 flex flex-col gap-5 md:gap-6">
+            
+            <!-- Terlaris Card -->
+            <div class="bg-[#EEF7FF] rounded-3xl p-5 sm:p-6 shadow-xs">
+                <h3 class="font-black text-lg text-[#1D3B47] tracking-tight mb-5">Terlaris</h3>
+                
                 <div class="space-y-4">
                     @forelse($topProducts ?? [] as $product)
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center font-bold">
-                                {{ substr($product->name, 0, 1) }}
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-3.5 min-w-0">
+                            <div class="w-11 h-11 rounded-2xl flex items-center justify-center font-black text-base shrink-0 shadow-xs {{ $avatarColors[$loop->index % count($avatarColors)] }}">
+                                {{ strtoupper(substr($product->name, 0, 1)) }}
                             </div>
-                            <div>
-                                <div class="font-medium text-sm text-gray-900">{{ $product->name }}</div>
-                                <div class="text-xs text-gray-500">{{ $product->sold_qty }} terjual</div>
+                            <div class="min-w-0">
+                                <h4 class="font-bold text-sm sm:text-base text-[#1D3B47] truncate leading-tight">{{ $product->name }}</h4>
+                                <p class="text-xs text-[#75929E] font-medium mt-0.5">{{ $product->sold_qty }} terjual</p>
                             </div>
                         </div>
-                        <div class="font-medium text-sm">Rp {{ number_format($product->revenue, 0, ',', '.') }}</div>
+                        <div class="font-bold text-sm sm:text-base text-[#1D3B47] whitespace-nowrap text-right pl-2">
+                            Rp {{ number_format($product->revenue, 0, ',', '.') }}
+                        </div>
                     </div>
                     @empty
-                    <div class="text-center text-sm text-gray-500 py-4">Belum ada data penjualan</div>
+                    <div class="text-center py-6 text-sm text-[#75929E] font-medium">
+                        Belum ada data penjualan
+                    </div>
                     @endforelse
                 </div>
             </div>
 
-            <!-- Low Stock -->
-            <div class="pos-card">
-                <h3 class="text-lg font-bold text-gray-900 mb-4 flex justify-between items-center">
-                    <span>Peringatan Stok</span>
-                    <span class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full font-medium">{{ $lowStockCount ?? 0 }}</span>
-                </h3>
+            <!-- Peringatan Stok Card -->
+            <div class="bg-[#EEF7FF] rounded-3xl p-5 sm:p-6 shadow-xs">
+                <h3 class="font-black text-lg text-[#1D3B47] tracking-tight mb-4">Peringatan stok</h3>
+                
                 <div class="space-y-3">
                     @forelse($lowStockProducts ?? [] as $product)
-                    <div class="flex items-center justify-between bg-red-50 p-3 rounded-lg border border-red-100">
-                        <div>
-                            <div class="font-medium text-sm text-red-900">{{ $product->name }}</div>
-                            <div class="text-xs text-red-700">SKU: {{ $product->sku }}</div>
+                    <div class="bg-[#e4eff3] rounded-2xl p-4 flex items-center justify-between text-[#1D3B47] shadow-xs">
+                        <div class="min-w-0 pr-3">
+                            <h4 class="font-bold text-sm sm:text-base text-[#1D3B47] leading-tight truncate">{{ $product->name }}</h4>
+                            <p class="text-xs text-[#75929E] font-semibold uppercase tracking-wider mt-0.5">{{ $product->sku }}</p>
                         </div>
-                        <div class="text-right">
-                            <div class="font-bold text-sm text-red-700">{{ $product->stock }}</div>
-                            <div class="text-xs text-red-500">Sisa</div>
+                        <div class="text-[#d9383a] font-black text-2xl sm:text-3xl tracking-tight shrink-0">
+                            {{ $product->stock }}
                         </div>
                     </div>
                     @empty
-                    <div class="text-center text-sm text-gray-500 py-4">Semua stok aman</div>
+                    <div class="text-center py-6 text-sm text-[#75929E] font-medium">
+                        Semua stok aman
+                    </div>
                     @endforelse
                 </div>
             </div>
-        </div>
-    </div>
-</div>
 
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const ctx = document.getElementById('salesChart');
-        if (ctx) {
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: {!! json_encode($chartLabels ?? ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min']) !!},
-                    datasets: [{
-                        label: 'Penjualan',
-                        data: {!! json_encode($chartData ?? [0,0,0,0,0,0,0]) !!},
-                        borderColor: '#0f766e',
-                        backgroundColor: 'rgba(15, 118, 110, 0.1)',
-                        borderWidth: 2,
-                        tension: 0.3,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return 'Rp ' + new Intl.NumberFormat('id-ID').format(value);
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-    });
-</script>
-@endpush
+        </div>
+
+    </div>
+
+</div>
 @endsection
+
+

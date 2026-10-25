@@ -45,6 +45,69 @@ class MidtransService
             : 'https://app.sandbox.midtrans.com/snap/v1/transactions';
     }
 
+    protected function transactionApiBase(): string
+    {
+        $override = config('midtrans.api_base_url');
+
+        if (! empty($override)) {
+            return rtrim($override, '/');
+        }
+
+        return $this->isProduction
+            ? 'https://api.midtrans.com'
+            : 'https://api.sandbox.midtrans.com';
+    }
+
+    /**
+     * Fetch the current status of a transaction directly from Midtrans.
+     *
+     * Returns null when unconfigured, not found, or on any transport error so
+     * callers can safely fall back to the webhook-driven status.
+     */
+    public function getTransactionStatus(string $orderId): ?array
+    {
+        if (! $this->isConfigured() || $orderId === '') {
+            return null;
+        }
+
+        $response = Http::withBasicAuth($this->serverKey, '')
+            ->acceptJson()
+            ->get($this->transactionApiBase().'/v2/'.$orderId.'/status');
+
+        if ($response->failed()) {
+            return null;
+        }
+
+        return $response->json();
+    }
+
+    /**
+     * Whether a transaction_status/fraud_status pair represents a settled payment.
+     */
+    public function isSuccessfulStatus(string $transactionStatus, ?string $fraudStatus = null): bool
+    {
+        if (! in_array($transactionStatus, ['capture', 'settlement'], true)) {
+            return false;
+        }
+
+        return $transactionStatus === 'settlement'
+            || $fraudStatus === null
+            || $fraudStatus === 'accept';
+    }
+
+    /**
+     * Map a failing Midtrans transaction_status to a local payment status.
+     */
+    public function failureStatusFor(string $transactionStatus): ?string
+    {
+        return match ($transactionStatus) {
+            'expire' => 'expired',
+            'cancel' => 'cancelled',
+            'deny' => 'failed',
+            default => null,
+        };
+    }
+
     /**
      * Create a Midtrans Snap transaction and return the raw response.
      *
@@ -70,7 +133,7 @@ class MidtransService
 
         $payload = [
             'transaction_details' => [
-                'order_id' => $sale->invoice_number,
+                'order_id' => $sale->midtransOrderId(),
                 'gross_amount' => (int) round((float) $sale->total_amount),
             ],
             'customer_details' => $customerDetails,
@@ -81,6 +144,7 @@ class MidtransService
         $response = Http::withBasicAuth($this->serverKey, '')
             ->acceptJson()
             ->asJson()
+            ->withHeaders($this->notificationHeaders())
             ->post($this->snapApiUrl(), $payload);
 
         if ($response->failed()) {
@@ -88,6 +152,22 @@ class MidtransService
         }
 
         return $response->json();
+    }
+
+    /**
+     * Headers that register this application's webhook on the transaction.
+     *
+     * @return array<string, string>
+     */
+    protected function notificationHeaders(): array
+    {
+        $notificationUrl = config('midtrans.notification_url');
+
+        if (empty($notificationUrl)) {
+            return [];
+        }
+
+        return ['X-Append-Notification' => $notificationUrl];
     }
 
     /**

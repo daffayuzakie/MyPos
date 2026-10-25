@@ -1,4 +1,4 @@
-@extends('layouts.pos')
+﻿@extends('layouts.pos')
 
 @section('content')
 <div class="p-6 max-w-xl mx-auto">
@@ -12,4 +12,6 @@
     </form>
 </div>
 @endsection
+
+
 

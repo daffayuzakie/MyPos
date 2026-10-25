@@ -1,1 +1,3 @@
-@extends('layouts.pos')
+﻿@extends('layouts.pos')
+
+

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <div class="container mx-auto py-8">
@@ -25,8 +25,14 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('products.store') }}" method="POST">
+                    <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
+
+                        <div class="mb-4">
+                            <x-input-label for="image" :value="__('Foto Produk (Opsional)')" />
+                            <input type="file" id="image" name="image" accept="image/*" class="block mt-1 w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#4D869C] file:text-[#4D869C] hover:file:bg-black">
+                            <x-input-error :messages="$errors->get('image')" class="mt-2" />
+                        </div>
 
                         <div class="mb-4">
                             <x-input-label for="name" :value="__('Name')" />
@@ -143,3 +149,5 @@
     </div>
 </div>
 @endsection
+
+

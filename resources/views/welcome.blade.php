@@ -1,11 +1,14 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="Kasir POS — aplikasi kasir dan manajemen toko untuk mengelola penjualan, stok, produk, dan laporan dalam satu tempat.">
+        <meta name="description" content="Kasir POS â€” aplikasi kasir dan manajemen toko untuk mengelola penjualan, stok, produk, dan laporan dalam satu tempat.">
 
-        <title>{{ config('app.name', 'Kasir POS') }} — Kasir & Manajemen Toko</title>
+        <title>{{ config('app.name', 'Kasir POS') }} â€” Kasir & Manajemen Toko</title>
+
+        <link rel="icon" type="image/png" href="{{ Storage::url('logo mypos.png') }}">
+        <link rel="apple-touch-icon" href="{{ Storage::url('logo mypos.png') }}">
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
@@ -286,3 +289,5 @@
         </footer>
     </body>
 </html>
+
+

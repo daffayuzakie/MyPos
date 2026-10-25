@@ -1,25 +1,25 @@
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer components {
     .pos-sidebar-link {
-        @apply flex items-center gap-3 px-4 py-3 text-sm text-gray-600 hover:bg-teal-50 hover:text-teal-700 rounded-lg transition-colors;
+        @apply flex items-center gap-3.5 px-4 py-3 text-sm font-semibold text-[#1D3B47] hover:text-[#192d35] hover:bg-[#c7e4de] rounded-2xl transition-all duration-200;
     }
     .pos-sidebar-link.active {
-        @apply bg-teal-50 text-teal-700 border-l-4 border-teal-700;
+        @apply bg-[#4D869C] text-white font-bold rounded-2xl shadow-sm;
     }
     .pos-btn-primary {
-        @apply bg-teal-700 text-white px-4 py-2 rounded-lg hover:bg-teal-800 transition-colors font-medium;
+        @apply bg-[#4D869C] text-white px-5 py-2.5 rounded-full hover:bg-[#3D6B7D] transition-colors font-bold shadow-sm;
     }
     .pos-btn-secondary {
-        @apply bg-white text-gray-700 px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors font-medium;
+        @apply bg-[#CDE8E5] text-[#1D3B47] px-5 py-2.5 rounded-full border border-[#c4d8e0] hover:bg-[#d5e5ec] transition-colors font-semibold;
     }
     .pos-card {
-        @apply bg-white rounded-xl shadow-sm border border-gray-100 p-6;
+        @apply bg-white rounded-3xl shadow-sm border border-[#D6E5ED] p-6;
     }
     .pos-product-card {
-        @apply bg-white rounded-xl border border-gray-100 p-3 cursor-pointer hover:shadow-md transition-shadow relative;
+        @apply bg-[#EEF7FF] rounded-3xl border border-[#D6E5ED] p-3 cursor-pointer hover:shadow-md transition-all duration-200 relative;
     }
     .hide-scrollbar::-webkit-scrollbar {
         display: none;
@@ -37,3 +37,4 @@
     .receipt-content { position: absolute; left: 0; top: 0; width: 80mm; font-size: 12px; }
     .no-print { display: none !important; }
 }
+

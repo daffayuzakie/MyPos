@@ -8,12 +8,14 @@ use App\Models\Payment;
 use App\Models\Sale;
 use App\Models\StockReservation;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PaymentService
 {
     public function __construct(
         protected StockService $stockService,
-        protected StockReservationService $reservationService
+        protected StockReservationService $reservationService,
+        protected MidtransService $midtransService
     ) {}
 
     /**
@@ -105,6 +107,92 @@ class PaymentService
 
             return $sale->fresh();
         });
+    }
+
+    /**
+     * Apply a Midtrans transaction payload to its local payment/sale.
+     *
+     * Shared by the webhook handler and the status reconciliation so both
+     * paths behave identically. Idempotent via the underlying mark methods.
+     */
+    public function applyMidtransStatus(Payment $payment, array $payload): Payment
+    {
+        $transactionStatus = (string) ($payload['transaction_status'] ?? '');
+        $fraudStatus = $payload['fraud_status'] ?? null;
+
+        if ($this->midtransService->isSuccessfulStatus($transactionStatus, $fraudStatus)) {
+            if (! $this->amountMatches($payment, $payload)) {
+                Log::warning('Midtrans status amount mismatch, payment not settled', [
+                    'payment_id' => $payment->id,
+                    'expected' => (float) $payment->amount,
+                    'received' => (float) ($payload['gross_amount'] ?? 0),
+                ]);
+
+                return $payment;
+            }
+
+            $this->markSalePaid($payment, $payload);
+
+            return $payment->fresh();
+        }
+
+        $failureStatus = $this->midtransService->failureStatusFor($transactionStatus);
+
+        if ($failureStatus !== null) {
+            $this->markSaleFailed($payment, $failureStatus, $payload);
+
+            return $payment->fresh();
+        }
+
+        // pending / unknown status: leave the sale as-is for a later check.
+        return $payment;
+    }
+
+    /**
+     * Pull the current status from Midtrans and reconcile a pending payment.
+     *
+     * Used as a fallback when the webhook is delayed, missing, or when local
+     * development cannot receive inbound notifications.
+     */
+    public function reconcileWithMidtrans(Payment $payment): Payment
+    {
+        if ($payment->provider !== 'midtrans' || $payment->status !== 'pending') {
+            return $payment;
+        }
+
+        $orderId = $payment->metadata['snap_order_id'] ?? null;
+
+        if (empty($orderId)) {
+            return $payment;
+        }
+
+        $payload = $this->midtransService->getTransactionStatus($orderId);
+
+        if ($payload === null) {
+            return $payment;
+        }
+
+        $payment->update([
+            'metadata' => array_merge($payment->metadata ?? [], [
+                'midtrans' => array_merge($payment->metadata['midtrans'] ?? [], [
+                    'last_checked_at' => now()->toIso8601String(),
+                ]),
+            ]),
+        ]);
+
+        return $this->applyMidtransStatus($payment, $payload);
+    }
+
+    /**
+     * Guard against settling a payment whose amount does not match Midtrans.
+     */
+    protected function amountMatches(Payment $payment, array $payload): bool
+    {
+        if (! isset($payload['gross_amount'])) {
+            return true;
+        }
+
+        return abs((float) $payload['gross_amount'] - (float) $payment->amount) < 0.01;
     }
 
     /**

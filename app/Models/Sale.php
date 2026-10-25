@@ -82,6 +82,17 @@ class Sale extends Model
         return $this->hasOne(Payment::class)->latest();
     }
 
+    /**
+     * Globally unique order id sent to Midtrans.
+     *
+     * Invoice numbers are only unique per business, so the business id is
+     * prefixed to satisfy Midtrans' global order_id uniqueness requirement.
+     */
+    public function midtransOrderId(): string
+    {
+        return $this->business_id.'-'.$this->invoice_number;
+    }
+
     public function items()
     {
         return $this->hasMany(SaleItem::class);

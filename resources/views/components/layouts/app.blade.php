@@ -1,4 +1,4 @@
-@extends('layouts.pos')
+﻿@extends('layouts.pos')
 
 @section('content')
     @isset($header)
@@ -9,3 +9,5 @@
 
     {{ $slot }}
 @endsection
+
+

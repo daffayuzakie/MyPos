@@ -11,4 +11,9 @@ Alpine.store('app', {
     }
 });
 
+// Global Modal State (To control hiding mobile bottom navbar when popups are active)
+Alpine.store('modal', {
+    open: false,
+});
+
 Alpine.start();

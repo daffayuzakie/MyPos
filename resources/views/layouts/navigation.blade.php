@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+﻿<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -13,7 +13,7 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('pos.index')" :active="request()->routeIs('pos.*')">
-                        <span class="font-bold text-teal-700">🛒 {{ __('Kasir (POS)') }}</span>
+                        <span class="font-bold text-teal-700">ðŸ›’ {{ __('Kasir (POS)') }}</span>
                     </x-nav-link>
 
                     <x-nav-link :href="route('reports.sales')" :active="request()->routeIs('reports.*')">
@@ -27,12 +27,6 @@
                     <x-nav-link :href="route('customers.index')" :active="request()->routeIs('customers.*')">
                         {{ __('Pelanggan') }}
                     </x-nav-link>
-
-                    @can('purchases view')
-                        <x-nav-link :href="route('purchases.index')" :active="request()->routeIs('purchases.index')">
-                            {{ __('Supplier') }}
-                        </x-nav-link>
-                    @endcan
 
                     @can('users view')
                         <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
@@ -98,7 +92,7 @@
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('pos.index')" :active="request()->routeIs('pos.*')">
-                🛒 {{ __('Kasir (POS)') }}
+                ðŸ›’ {{ __('Kasir (POS)') }}
             </x-responsive-nav-link>
 
             <x-responsive-nav-link :href="route('reports.sales')" :active="request()->routeIs('reports.*')">
@@ -112,12 +106,6 @@
             <x-responsive-nav-link :href="route('customers.index')" :active="request()->routeIs('customers.*')">
                 {{ __('Pelanggan') }}
             </x-responsive-nav-link>
-
-            @can('purchases view')
-                <x-responsive-nav-link :href="route('purchases.index')" :active="request()->routeIs('purchases.index')">
-                    {{ __('Supplier') }}
-                </x-responsive-nav-link>
-            @endcan
 
             @can('users view')
                 <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
@@ -158,3 +146,4 @@
         </div>
     </div>
 </nav>
+
