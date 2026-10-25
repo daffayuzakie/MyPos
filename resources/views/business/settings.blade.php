@@ -24,13 +24,13 @@
     <div class="flex justify-end items-center">
         <span class="sr-only">Business Settings</span>
         <button type="button" @click="document.getElementById('settings-form').submit()" 
-                class="bg-[#1D3B47] hover:bg-[#1a1f2c] text-white font-black px-7 py-2.5 rounded-full text-xs sm:text-sm shadow-xs transition-all">
+                class="bg-[#4D869C] hover:bg-[#3D6B7D] text-white font-bold px-7 py-2.5 rounded-full text-xs sm:text-sm shadow-xs transition-all">
             Simpan perubahan
         </button>
     </div>
 
     <!-- Mobile Horizontal Tabs Navigation (Pengaturan Â· Mobile.png) -->
-    <div class="lg:hidden w-full overflow-x-auto hide-scrollbar bg-white rounded-2xl p-2 flex items-center gap-2 text-xs">
+    <div class="lg:hidden w-full overflow-x-auto hide-scrollbar bg-white border border-[#D6E5ED] rounded-2xl p-2 flex items-center gap-2 text-xs">
         <button type="button" @click="activeTab = 'profile'" 
                 :class="activeTab === 'profile' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'text-[#1D3B47] font-semibold'"
                 class="px-4 py-2 rounded-xl whitespace-nowrap transition-all">
@@ -72,52 +72,52 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 md:gap-6 items-start">
         
         <!-- Left Side Sub-Navigation Menu (Desktop) -->
-        <div class="hidden lg:block lg:col-span-4 xl:col-span-3 bg-white rounded-3xl p-3 shadow-xs space-y-1.5">
+        <div class="hidden lg:block lg:col-span-4 xl:col-span-3 bg-white border border-[#D6E5ED] rounded-3xl p-3 shadow-xs space-y-1.5">
             <button type="button" @click="activeTab = 'profile'" 
-                    :class="activeTab === 'profile' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'text-[#1D3B47] hover:text-black hover:bg-white/40 font-semibold'"
+                    :class="activeTab === 'profile' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'text-[#1D3B47] hover:text-black hover:bg-[#EEF7FF] font-semibold'"
                     class="w-full text-left px-5 py-3 rounded-2xl text-sm transition-all flex items-center justify-between">
                 <span>Profil usaha</span>
             </button>
 
             <button type="button" @click="activeTab = 'tax'" 
-                    :class="activeTab === 'tax' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'text-[#1D3B47] hover:text-black hover:bg-white/40 font-semibold'"
+                    :class="activeTab === 'tax' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'text-[#1D3B47] hover:text-black hover:bg-[#EEF7FF] font-semibold'"
                     class="w-full text-left px-5 py-3 rounded-2xl text-sm transition-all flex items-center justify-between">
                 <span>Pajak dan biaya</span>
             </button>
 
             <button type="button" @click="activeTab = 'receipt'" 
-                    :class="activeTab === 'receipt' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'text-[#1D3B47] hover:text-black hover:bg-white/40 font-semibold'"
+                    :class="activeTab === 'receipt' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'text-[#1D3B47] hover:text-black hover:bg-[#EEF7FF] font-semibold'"
                     class="w-full text-left px-5 py-3 rounded-2xl text-sm transition-all flex items-center justify-between">
                 <span>Struk</span>
             </button>
 
             <button type="button" @click="activeTab = 'payment'" 
-                    :class="activeTab === 'payment' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'text-[#1D3B47] hover:text-black hover:bg-white/40 font-semibold'"
+                    :class="activeTab === 'payment' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'text-[#1D3B47] hover:text-black hover:bg-[#EEF7FF] font-semibold'"
                     class="w-full text-left px-5 py-3 rounded-2xl text-sm transition-all flex items-center justify-between">
                 <span>Pembayaran</span>
             </button>
 
             <button type="button" @click="activeTab = 'device'" 
-                    :class="activeTab === 'device' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'text-[#1D3B47] hover:text-black hover:bg-white/40 font-semibold'"
+                    :class="activeTab === 'device' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'text-[#1D3B47] hover:text-black hover:bg-[#EEF7FF] font-semibold'"
                     class="w-full text-left px-5 py-3 rounded-2xl text-sm transition-all flex items-center justify-between">
                 <span>Perangkat</span>
             </button>
 
             <button type="button" @click="activeTab = 'notification'" 
-                    :class="activeTab === 'notification' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'text-[#1D3B47] hover:text-black hover:bg-white/40 font-semibold'"
+                    :class="activeTab === 'notification' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'text-[#1D3B47] hover:text-black hover:bg-[#EEF7FF] font-semibold'"
                     class="w-full text-left px-5 py-3 rounded-2xl text-sm transition-all flex items-center justify-between">
                 <span>Notifikasi</span>
             </button>
 
             <button type="button" @click="activeTab = 'security'" 
-                    :class="activeTab === 'security' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'text-[#1D3B47] hover:text-black hover:bg-white/40 font-semibold'"
+                    :class="activeTab === 'security' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'text-[#1D3B47] hover:text-black hover:bg-[#EEF7FF] font-semibold'"
                     class="w-full text-left px-5 py-3 rounded-2xl text-sm transition-all flex items-center justify-between">
                 <span>Keamanan dan backup</span>
             </button>
         </div>
 
         <!-- Right Side Form Content Card (Matching Pengaturan.png) -->
-        <div class="lg:col-span-8 xl:col-span-9 bg-white rounded-3xl p-6 sm:p-8 shadow-xs">
+        <div class="lg:col-span-8 xl:col-span-9 bg-white border border-[#D6E5ED] rounded-3xl p-6 sm:p-8 shadow-xs">
             <form id="settings-form" method="POST" action="{{ route('business.settings.update') }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
@@ -136,7 +136,7 @@
                                 </template>
                             </div>
                             <div>
-                                <label for="logo-upload" class="font-bold text-sm text-[#1D3B47] cursor-pointer hover:underline">
+                                <label for="logo-upload" class="bg-[#CDE8E5] hover:bg-[#b8ded9] text-[#1D3B47] font-bold px-5 py-2 rounded-full text-xs transition-colors cursor-pointer inline-block">
                                     Pilih logo
                                 </label>
                                 <input id="logo-upload" type="file" name="logo" accept="image/png,image/jpeg,image/webp" class="hidden"
@@ -150,7 +150,7 @@
                         <div>
                             <label class="block text-xs font-bold text-[#1D3B47] mb-1.5">Nama usaha</label>
                             <input type="text" name="name" value="{{ old('name', $business->name) }}" required
-                                   class="w-full px-4 py-3.5 bg-[#dfe1e5]/80 border-0 rounded-2xl text-sm text-[#1D3B47] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#4D869C] transition-all" 
+                                   class="w-full px-4 py-3.5 bg-white border border-[#D6E5ED] rounded-2xl text-sm text-[#1D3B47] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#4D869C] transition-all" 
                                    placeholder="Nama usaha">
                         </div>
                         <div>
@@ -158,7 +158,7 @@
                             <input type="text" name="slug" value="{{ old('slug', $business->slug) }}" required
                                    x-data
                                    @input="$event.target.value = $event.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')"
-                                   class="w-full px-4 py-3.5 bg-[#dfe1e5]/80 border-0 rounded-2xl text-sm text-[#1D3B47] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#4D869C] transition-all" 
+                                   class="w-full px-4 py-3.5 bg-white border border-[#D6E5ED] rounded-2xl text-sm text-[#1D3B47] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#4D869C] transition-all" 
                                    placeholder="kode-usaha">
                         </div>
                     </div>
@@ -167,7 +167,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
                         <div>
                             <label class="block text-xs font-bold text-[#1D3B47] mb-1.5">Jenis usaha</label>
-                            <select class="w-full px-4 py-3.5 bg-[#dfe1e5]/80 border-0 rounded-2xl text-sm text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C] transition-all">
+                            <select class="w-full px-4 py-3.5 bg-white border border-[#D6E5ED] rounded-2xl text-sm text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C] transition-all">
                                 <option>Retail atau toko</option>
                                 <option>Kafe & Restoran</option>
                                 <option>Jasa & Layanan</option>
@@ -176,7 +176,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-[#1D3B47] mb-1.5">Zona waktu</label>
-                            <select class="w-full px-4 py-3.5 bg-[#dfe1e5]/80 border-0 rounded-2xl text-sm text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C] transition-all">
+                            <select class="w-full px-4 py-3.5 bg-white border border-[#D6E5ED] rounded-2xl text-sm text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C] transition-all">
                                 <option>WIB (Waktu Indonesia Barat)</option>
                                 <option>WITA (Waktu Indonesia Tengah)</option>
                                 <option>WIT (Waktu Indonesia Timur)</option>
@@ -188,7 +188,7 @@
                     <div>
                         <label class="block text-xs font-bold text-[#1D3B47] mb-1.5">Alamat</label>
                         <input type="text" name="address" value="{{ old('address', $business->address) }}"
-                               class="w-full px-4 py-3.5 bg-[#dfe1e5]/80 border-0 rounded-2xl text-sm text-[#1D3B47] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#4D869C] transition-all" 
+                               class="w-full px-4 py-3.5 bg-white border border-[#D6E5ED] rounded-2xl text-sm text-[#1D3B47] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#4D869C] transition-all" 
                                placeholder="Alamat usaha">
                     </div>
 
@@ -196,7 +196,7 @@
                     <div>
                         <label class="block text-xs font-bold text-[#1D3B47] mb-1.5">Nomor telepon</label>
                         <input type="text" name="phone" value="{{ old('phone', $business->phone) }}"
-                               class="w-full px-4 py-3.5 bg-[#dfe1e5]/80 border-0 rounded-2xl text-sm text-[#1D3B47] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#4D869C] transition-all" 
+                               class="w-full px-4 py-3.5 bg-white border border-[#D6E5ED] rounded-2xl text-sm text-[#1D3B47] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#4D869C] transition-all" 
                                placeholder="+628123456789">
                     </div>
                 </div>
@@ -207,7 +207,7 @@
                     <div>
                         <label class="block text-xs font-bold text-[#1D3B47] mb-1.5">Tarif Pajak PPN (%)</label>
                         <input type="number" name="tax_percentage" value="{{ old('tax_percentage', $business->tax_percentage ?? 11) }}" step="0.1" min="0" max="100"
-                               class="w-full px-4 py-3.5 bg-[#dfe1e5]/80 border-0 rounded-2xl text-sm text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
+                               class="w-full px-4 py-3.5 bg-white border border-[#D6E5ED] rounded-2xl text-sm text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
                     </div>
                 </div>
 
@@ -217,18 +217,18 @@
                     <div>
                         <label class="block text-xs font-bold text-[#1D3B47] mb-1.5">Prefix Nomor Nota</label>
                         <input type="text" name="invoice_prefix" value="{{ old('invoice_prefix', $business->invoice_prefix ?? 'INV') }}"
-                               class="w-full px-4 py-3.5 bg-[#dfe1e5]/80 border-0 rounded-2xl text-sm text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
+                               class="w-full px-4 py-3.5 bg-white border border-[#D6E5ED] rounded-2xl text-sm text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
                     </div>
                 </div>
 
                 <!-- SECTION 4: PEMBAYARAN -->
                 <div x-show="activeTab === 'payment'" x-cloak class="space-y-4">
                     <h2 class="text-base font-black text-[#1D3B47] border-b border-[#D6E5ED] pb-3">Metode Pembayaran</h2>
-                    <div class="p-4 bg-white/60 rounded-2xl flex items-center justify-between text-xs">
+                    <div class="p-4 bg-[#EEF7FF] rounded-2xl flex items-center justify-between text-xs">
                         <span class="font-bold text-[#1D3B47]">Pembayaran Tunai (Cash)</span>
                         <input type="checkbox" checked disabled class="w-4 h-4 text-white rounded">
                     </div>
-                    <div class="p-4 bg-white/60 rounded-2xl flex items-center justify-between text-xs">
+                    <div class="p-4 bg-[#EEF7FF] rounded-2xl flex items-center justify-between text-xs">
                         <span class="font-bold text-[#1D3B47]">QRIS Dinamis & Midtrans</span>
                         <input type="checkbox" checked class="w-4 h-4 text-white rounded">
                     </div>
@@ -237,7 +237,7 @@
                 <!-- SECTION 5: PERANGKAT -->
                 <div x-show="activeTab === 'device'" x-cloak class="space-y-4">
                     <h2 class="text-base font-black text-[#1D3B47] border-b border-[#D6E5ED] pb-3">Perangkat & Printer</h2>
-                    <div class="p-4 bg-white/60 rounded-2xl flex items-center justify-between text-xs">
+                    <div class="p-4 bg-[#EEF7FF] rounded-2xl flex items-center justify-between text-xs">
                         <span class="font-bold text-[#1D3B47]">Printer Thermal Kasir</span>
                         <span class="px-3 py-1 bg-[#CDE8E5] text-[#1D3B47] rounded-full text-xs font-bold">Siap</span>
                     </div>
@@ -246,7 +246,7 @@
                 <!-- SECTION 6: NOTIFIKASI -->
                 <div x-show="activeTab === 'notification'" x-cloak class="space-y-4">
                     <h2 class="text-base font-black text-[#1D3B47] border-b border-[#D6E5ED] pb-3">Notifikasi & Peringatan</h2>
-                    <div class="p-4 bg-white/60 rounded-2xl flex items-center justify-between text-xs">
+                    <div class="p-4 bg-[#EEF7FF] rounded-2xl flex items-center justify-between text-xs">
                         <span class="font-bold text-[#1D3B47]">Peringatan Stok Menipis</span>
                         <input type="checkbox" checked class="w-4 h-4 text-white rounded">
                     </div>

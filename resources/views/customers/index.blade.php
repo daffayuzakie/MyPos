@@ -3,7 +3,7 @@
 @section('topbar-search')
     <form method="GET" action="{{ route('customers.index') }}" class="w-full relative">
         <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama atau telepon..." 
-               class="w-full bg-[#e6e8eb] border-0 rounded-full px-5 py-2.5 text-sm text-[#1D3B47] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#4D869C] transition-all">
+               class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-full px-5 py-2.5 text-sm text-[#1D3B47] placeholder-[#75929E] focus:outline-none focus:ring-2 focus:ring-[#4D869C] transition-all">
     </form>
 @endsection
 
@@ -26,7 +26,7 @@
     </div>
 
     <!-- Customers Table Card Container -->
-    <div class="bg-white rounded-3xl p-5 sm:p-6 shadow-xs overflow-hidden">
+    <div class="bg-white border border-[#D6E5ED] rounded-3xl p-5 sm:p-6 shadow-xs overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left text-sm">
                 <thead>
@@ -41,7 +41,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-300/70">
                     @forelse($customers ?? [] as $customer)
-                    <tr class="hover:bg-white/40 transition-colors">
+                    <tr class="hover:bg-[#EEF7FF] transition-colors">
                         <!-- Nama & Avatar -->
                         <td class="py-4 pr-3">
                             <div class="flex items-center gap-3 min-w-0">
@@ -62,7 +62,7 @@
 
                         <!-- Level (Desktop) -->
                         <td class="hidden md:table-cell py-4 pr-3">
-                            <span class="bg-gray-300/70 text-[#1D3B47] px-3.5 py-1 rounded-full text-xs font-semibold capitalize">
+                            <span class="bg-white border border-[#D6E5ED] text-[#1D3B47] px-3.5 py-1 rounded-full text-xs font-semibold capitalize">
                                 {{ $customer->level ?? 'Reguler' }}
                             </span>
                         </td>
@@ -148,7 +148,7 @@
             <div class="flex items-center justify-between mb-5 shrink-0">
                 <h3 class="text-lg sm:text-xl font-black text-[#1D3B47]" x-text="isEdit ? 'Edit pelanggan' : 'Tambah pelanggan'"></h3>
                 <button type="button" @click="showModal = false" 
-                        class="w-9 h-9 bg-[#4D869C] hover:bg-[#3D6B7D] text-white rounded-full flex items-center justify-center shrink-0 transition-colors">
+                        class="w-9 h-9 bg-[#CDE8E5] hover:bg-[#b8ded9] text-[#1D3B47] rounded-full flex items-center justify-center shrink-0 transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
@@ -162,13 +162,13 @@
 
                 <!-- Top 2 Summary Cards (Poin & Total Belanja) - When in Edit Mode -->
                 <div class="grid grid-cols-2 gap-3" x-show="isEdit">
-                    <div class="bg-[#1D3B47] rounded-2xl p-4 text-white">
-                        <span class="text-xs text-gray-400 font-medium">Poin</span>
-                        <div class="text-2xl font-black text-white mt-1" x-text="form.points"></div>
+                    <div class="bg-[#CDE8E5] rounded-2xl p-4">
+                        <span class="text-xs text-[#75929E] font-semibold">Poin</span>
+                        <div class="text-2xl font-black text-[#1D3B47] mt-1" x-text="form.points"></div>
                     </div>
-                    <div class="bg-[#1D3B47] rounded-2xl p-4 text-white">
-                        <span class="text-xs text-gray-400 font-medium">Total belanja</span>
-                        <div class="text-xl sm:text-2xl font-black text-white mt-1" x-text="formatRupiah(form.total_spent)"></div>
+                    <div class="bg-[#CDE8E5] rounded-2xl p-4">
+                        <span class="text-xs text-[#75929E] font-semibold">Total belanja</span>
+                        <div class="text-xl sm:text-2xl font-black text-[#1D3B47] mt-1" x-text="formatRupiah(form.total_spent)"></div>
                     </div>
                 </div>
 
@@ -176,7 +176,7 @@
                 <div>
                     <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">Nama lengkap <span class="text-[#d9383a]">*</span></label>
                     <input type="text" name="name" x-model="form.name" required 
-                           class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]" placeholder="Budi Santoso">
+                           class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]" placeholder="Budi Santoso">
                 </div>
 
                 <!-- 2 Kolom: Nomor Telepon & Level -->
@@ -184,12 +184,12 @@
                     <div>
                         <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">Nomor telepon</label>
                         <input type="text" name="phone" x-model="form.phone" 
-                               class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]" placeholder="081234567890">
+                               class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]" placeholder="081234567890">
                     </div>
                     <div>
                         <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">Level</label>
                         <select name="level" x-model="form.level" 
-                                class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
+                                class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
                             <option value="regular">Reguler</option>
                             <option value="silver">Silver</option>
                             <option value="gold">Gold</option>
@@ -202,7 +202,7 @@
                 <div>
                     <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">Email (Opsional)</label>
                     <input type="email" name="email" x-model="form.email" 
-                           class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]" placeholder="email@contoh.com">
+                           class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]" placeholder="email@contoh.com">
                 </div>
             </form>
 
@@ -222,11 +222,11 @@
                 </template>
 
                 <div class="flex items-center gap-4">
-                    <button type="button" @click="showModal = false" class="text-[#75929E] font-bold hover:text-black text-xs sm:text-sm transition-colors">
+                    <button type="button" @click="showModal = false" class="bg-[#CDE8E5] hover:bg-[#b8ded9] text-[#1D3B47] font-bold px-6 py-2.5 rounded-full text-xs sm:text-sm transition-colors">
                         Batal
                     </button>
                     <button type="submit" form="customerForm" 
-                            class="bg-[#4D869C] hover:bg-[#3D6B7D] text-white font-bold px-7 sm:px-8 py-3 rounded-full text-xs sm:text-sm shadow-sm transition-all">
+                            class="bg-[#4D869C] hover:bg-[#3D6B7D] text-white font-bold px-7 py-2.5 rounded-full text-xs sm:text-sm shadow-xs transition-all">
                         Simpan
                     </button>
                 </div>

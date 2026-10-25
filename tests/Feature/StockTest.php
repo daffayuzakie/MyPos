@@ -62,10 +62,6 @@ class StockTest extends TestCase
             'sales create',
             'sales cancel',
 
-            'purchases view',
-            'purchases create',
-            'purchases edit',
-
             'users view',
             'users create',
             'users edit',
@@ -125,7 +121,6 @@ class StockTest extends TestCase
             'sales view-all',
             'sales view-own',
             'sales create',
-            'purchases view',
             'reports view',
             'stock view',
         ]);

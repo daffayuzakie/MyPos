@@ -6,13 +6,10 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MidtransController;
-use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\PinLoginController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\PurchaseController;
-use App\Http\Controllers\PurchaseItemController;
 use App\Http\Controllers\RefundController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SaleController;
@@ -122,14 +119,6 @@ Route::middleware('auth')->group(function () {
     // Pengaturan (Image 1)
     Route::get('/business/settings', [BusinessController::class, 'settings'])->name('business.settings');
     Route::put('/business/settings', [BusinessController::class, 'update'])->name('business.settings.update');
-
-    // Onboarding Usaha Baru
-    Route::get('/onboarding', [OnboardingController::class, 'show'])->name('onboarding.show');
-    Route::post('/onboarding/business', [OnboardingController::class, 'storeBusiness'])->name('onboarding.business');
-    Route::post('/onboarding/branch', [OnboardingController::class, 'storeBranch'])->name('onboarding.branch');
-    Route::post('/onboarding/preferences', [OnboardingController::class, 'storePreferences'])->name('onboarding.preferences');
-    Route::post('/onboarding/products', [OnboardingController::class, 'storeProduct'])->name('onboarding.products');
-    Route::post('/onboarding/complete', [OnboardingController::class, 'complete'])->name('onboarding.complete');
 
     // Pemilihan Cabang
     Route::get('/select-branch', [BranchController::class, 'select'])->name('branches.select');

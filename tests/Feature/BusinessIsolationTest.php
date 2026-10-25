@@ -51,7 +51,6 @@ class BusinessIsolationTest extends TestCase
         $permissionNames = [
             'products view', 'products create', 'products edit', 'products delete',
             'sales view-all', 'sales view-own', 'sales create', 'sales cancel',
-            'purchases view', 'purchases create', 'purchases edit',
             'users view', 'users create', 'users edit', 'users deactivate',
             'reports view', 'business settings',
             'categories view', 'categories create', 'categories edit', 'categories delete',
@@ -74,7 +73,6 @@ class BusinessIsolationTest extends TestCase
             'sales view-all',
             'sales view-own',
             'sales create',
-            'purchases view',
             'reports view',
         ];
         $kasirPermissionIds = [];

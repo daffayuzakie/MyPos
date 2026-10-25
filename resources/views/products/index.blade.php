@@ -3,7 +3,7 @@
 @section('topbar-search')
     <form method="GET" action="{{ route('products.index') }}" class="w-full relative">
         <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari produk / SKU..." 
-               class="w-full bg-[#e6e8eb] border-0 rounded-full px-5 py-2.5 text-sm text-[#1D3B47] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#4D869C] transition-all">
+               class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-full px-5 py-2.5 text-sm text-[#1D3B47] placeholder-[#75929E] focus:outline-none focus:ring-2 focus:ring-[#4D869C] transition-all">
     </form>
 @endsection
 
@@ -42,15 +42,15 @@
         <!-- Filter Tabs -->
         <div class="flex flex-wrap items-center gap-2">
             <a href="?filter=all{{ request('search') ? '&search=' . urlencode(request('search')) : '' }}" 
-               class="{{ ($filter ?? 'all') === 'all' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'bg-white text-[#1D3B47] hover:text-black font-semibold' }} px-5 py-2 rounded-full text-xs sm:text-sm transition-all">
+               class="{{ ($filter ?? 'all') === 'all' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'bg-[#CDE8E5] text-[#1D3B47] hover:bg-[#b8ded9] font-semibold' }} px-5 py-2 rounded-full text-xs sm:text-sm transition-all">
                 Semua
             </a>
             <a href="?filter=low{{ request('search') ? '&search=' . urlencode(request('search')) : '' }}" 
-               class="{{ ($filter ?? 'all') === 'low' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'bg-white text-[#1D3B47] hover:text-black font-semibold' }} px-5 py-2 rounded-full text-xs sm:text-sm transition-all">
+               class="{{ ($filter ?? 'all') === 'low' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'bg-[#CDE8E5] text-[#1D3B47] hover:bg-[#b8ded9] font-semibold' }} px-5 py-2 rounded-full text-xs sm:text-sm transition-all">
                 Stok menipis
             </a>
             <a href="?filter=empty{{ request('search') ? '&search=' . urlencode(request('search')) : '' }}" 
-               class="{{ ($filter ?? 'all') === 'empty' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'bg-white text-[#1D3B47] hover:text-black font-semibold' }} px-5 py-2 rounded-full text-xs sm:text-sm transition-all">
+               class="{{ ($filter ?? 'all') === 'empty' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'bg-[#CDE8E5] text-[#1D3B47] hover:bg-[#b8ded9] font-semibold' }} px-5 py-2 rounded-full text-xs sm:text-sm transition-all">
                 Habis
             </a>
         </div>
@@ -60,25 +60,25 @@
             @can('categories view')
             <button type="button" @click="showCategoryModal = true"
                     data-testid="manage-categories"
-                    class="bg-white hover:bg-gray-200 text-[#1D3B47] font-semibold px-5 py-2 rounded-full text-xs sm:text-sm transition-all">
+                    class="bg-[#CDE8E5] hover:bg-[#b8ded9] text-[#1D3B47] font-semibold px-5 py-2 rounded-full text-xs sm:text-sm transition-all">
                 Kategori
             </button>
             @endcan
 
             <a href="{{ route('stock.index') }}" 
-               class="bg-white hover:bg-gray-200 text-[#1D3B47] font-semibold px-5 py-2 rounded-full text-xs sm:text-sm transition-all">
+               class="bg-[#CDE8E5] hover:bg-[#b8ded9] text-[#1D3B47] font-semibold px-5 py-2 rounded-full text-xs sm:text-sm transition-all">
                 Mutasi stok
             </a>
 
             <button type="button" @click="showCreateModal = true"
-                    class="bg-[#1D3B47] hover:bg-[#1a1f2c] text-white font-bold px-5 py-2 rounded-full text-xs sm:text-sm transition-all shadow-xs flex items-center gap-1.5">
+                    class="bg-[#4D869C] hover:bg-[#3D6B7D] text-white font-bold px-5 py-2 rounded-full text-xs sm:text-sm transition-all shadow-xs flex items-center gap-1.5">
                 + Buat produk
             </button>
         </div>
     </div>
 
     <!-- Products Table Card Container -->
-    <div class="bg-white rounded-3xl p-5 sm:p-6 shadow-xs overflow-hidden">
+    <div class="bg-white border border-[#D6E5ED] rounded-3xl p-5 sm:p-6 shadow-xs overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left text-sm">
                 <thead>
@@ -96,7 +96,7 @@
                     @php
                         $avatarClass = $avatarColors[$loop->index % count($avatarColors)];
                     @endphp
-                    <tr class="hover:bg-white/40 transition-colors">
+                    <tr class="hover:bg-[#EEF7FF] transition-colors">
                         <!-- Produk (Avatar/Foto + Nama) -->
                         <td class="py-3.5 pr-3">
                             <div class="flex items-center gap-3 min-w-0">
@@ -116,7 +116,7 @@
 
                         <!-- Kategori (Desktop) -->
                         <td class="hidden md:table-cell py-3.5 pr-3">
-                            <span class="bg-gray-300/70 text-[#1D3B47] px-3.5 py-1 rounded-full text-xs font-semibold">
+                            <span class="bg-[#CDE8E5] text-[#1D3B47] px-3.5 py-1 rounded-full text-xs font-semibold">
                                 {{ $product->category->name ?? 'Umum' }}
                             </span>
                         </td>
@@ -213,7 +213,7 @@
                 <h3 class="text-lg sm:text-xl font-black text-[#1D3B47]">Edit produk</h3>
                 <!-- Close Button Dark Circle -->
                 <button type="button" @click="showEditModal = false" 
-                        class="w-9 h-9 bg-[#4D869C] hover:bg-[#3D6B7D] text-white rounded-full flex items-center justify-center shrink-0 transition-colors">
+                        class="w-9 h-9 bg-[#CDE8E5] hover:bg-[#b8ded9] text-[#1D3B47] rounded-full flex items-center justify-center shrink-0 transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
@@ -249,7 +249,7 @@
                 <div>
                     <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">Nama produk</label>
                     <input type="text" name="name" x-model="editForm.name" required 
-                           class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
+                           class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
                 </div>
 
                 <!-- 2 Kolom: Kategori & SKU -->
@@ -257,7 +257,7 @@
                     <div>
                         <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">Kategori</label>
                         <select name="category_id" x-model="editForm.category_id" required 
-                                class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
+                                class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
                             <option value="">Pilih Kategori</option>
                             @foreach($categories ?? [] as $category)
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -267,7 +267,7 @@
                     <div>
                         <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">SKU</label>
                         <input type="text" name="sku" x-model="editForm.sku" required 
-                               class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] font-mono uppercase focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
+                               class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] font-mono uppercase focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
                     </div>
                 </div>
 
@@ -276,12 +276,12 @@
                     <div>
                         <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">Harga jual</label>
                         <input type="number" name="selling_price" x-model="editForm.selling_price" required min="0" 
-                               class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
+                               class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
                     </div>
                     <div>
                         <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">Harga modal</label>
                         <input type="number" name="purchase_price" x-model="editForm.purchase_price" required min="0" 
-                               class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
+                               class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
                     </div>
                 </div>
 
@@ -289,7 +289,7 @@
                 <div>
                     <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">Stok saat ini</label>
                     <input type="number" name="stock" x-model="editForm.stock" min="0" 
-                           class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
+                           class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
                 </div>
 
                 <!-- Toggle Switch: Tampil di kasir -->
@@ -297,8 +297,8 @@
                     <span class="text-xs sm:text-sm font-bold text-[#1D3B47]">Tampil di kasir</span>
                     <button type="button" @click="editForm.is_active = !editForm.is_active" 
                             class="w-12 h-6.5 flex items-center rounded-full p-1 transition-colors duration-200 ease-in-out border-2 border-[#4D869C]"
-                            :class="editForm.is_active ? 'bg-[#4D869C]' : 'bg-gray-300'">
-                        <div class="w-4.5 h-4.5 rounded-full bg-[#4D869C] transition-transform duration-200 ease-in-out"
+                            :class="editForm.is_active ? 'bg-[#4D869C]' : 'bg-[#CDE8E5]'">
+                        <div class="w-4.5 h-4.5 rounded-full bg-white shadow-xs transition-transform duration-200 ease-in-out"
                              :class="editForm.is_active ? 'translate-x-5' : 'translate-x-0'"></div>
                     </button>
                     <input type="hidden" name="is_active" :value="editForm.is_active ? '1' : '0'">
@@ -316,7 +316,7 @@
                 </form>
 
                 <div class="flex items-center gap-4">
-                    <button type="button" @click="showEditModal = false" class="text-[#75929E] font-bold hover:text-black text-xs sm:text-sm transition-colors">
+                    <button type="button" @click="showEditModal = false" class="bg-[#CDE8E5] hover:bg-[#b8ded9] text-[#1D3B47] font-bold px-6 py-2.5 rounded-full text-xs sm:text-sm transition-colors">
                         Batal
                     </button>
                     <button type="submit" form="editProductForm" 
@@ -384,13 +384,13 @@
                 <div>
                     <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">Nama produk <span class="text-[#d9383a]">*</span></label>
                     <input type="text" name="name" required value="{{ old('name') }}" 
-                           class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]" placeholder="contoh: Kentang Goreng">
+                           class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]" placeholder="contoh: Kentang Goreng">
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">Kategori</label>
-                        <select name="category_id" class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
+                        <select name="category_id" class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
                             <option value="">(Pilih Kategori)</option>
                             @foreach($categories ?? [] as $category)
                             <option value="{{ $category->id }}" @selected(old('category_id') == $category->id)>{{ $category->name }}</option>
@@ -400,7 +400,7 @@
                     <div>
                         <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">SKU (Kode)</label>
                         <input type="text" name="sku" value="{{ old('sku') }}" 
-                                class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] font-mono uppercase focus:outline-none focus:ring-2 focus:ring-[#4D869C]" placeholder="Otomatis jika kosong">
+                                class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] font-mono uppercase focus:outline-none focus:ring-2 focus:ring-[#4D869C]" placeholder="Otomatis jika kosong">
                     </div>
                 </div>
 
@@ -408,12 +408,12 @@
                     <div>
                         <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">Harga jual <span class="text-[#d9383a]">*</span></label>
                         <input type="number" name="selling_price" required min="0" value="{{ old('selling_price') }}" 
-                               class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]" placeholder="20000">
+                               class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]" placeholder="20000">
                     </div>
                     <div>
                         <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">Harga modal</label>
                         <input type="number" name="purchase_price" min="0" value="{{ old('purchase_price') }}" 
-                               class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]" placeholder="9000">
+                               class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]" placeholder="9000">
                     </div>
                 </div>
 
@@ -421,11 +421,11 @@
                     <div>
                         <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">Stok awal</label>
                         <input type="number" name="stock" value="{{ old('stock', 50) }}" min="0" required 
-                               class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
+                               class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
                     </div>
                     <div>
                         <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">Satuan</label>
-                        <select name="unit_id" class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
+                        <select name="unit_id" class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
                             <option value="">(Pcs)</option>
                             @foreach($units ?? [] as $unit)
                             <option value="{{ $unit->id }}" @selected(old('unit_id') == $unit->id)>{{ $unit->name }}</option>

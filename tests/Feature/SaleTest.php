@@ -47,7 +47,6 @@ class SaleTest extends TestCase
         $permissionNames = [
             'products view', 'products create', 'products edit', 'products delete',
             'sales view-all', 'sales view-own', 'sales create', 'sales cancel',
-            'purchases view', 'purchases create', 'purchases edit',
             'stock view', 'stock create',
             'categories view', 'categories create', 'categories edit', 'categories delete',
             'units view', 'units create', 'units edit', 'units delete',

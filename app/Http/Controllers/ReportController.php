@@ -34,7 +34,7 @@ class ReportController extends Controller
             $query->whereDate($prefix.'transaction_date', Carbon::today()->toDateString());
         } elseif ($period === '7days') {
             $query->whereDate($prefix.'transaction_date', '>=', Carbon::now()->subDays(6)->toDateString())
-                  ->whereDate($prefix.'transaction_date', '<=', Carbon::today()->toDateString());
+                ->whereDate($prefix.'transaction_date', '<=', Carbon::today()->toDateString());
         } elseif ($period === 'month') {
             $query->whereBetween($prefix.'transaction_date', [
                 Carbon::now()->startOfMonth()->toDateString(),
@@ -72,6 +72,10 @@ class ReportController extends Controller
         $averagePerTransaction = $transactionCount > 0 ? round($totalSales / $transactionCount) : 0;
         $totalDiscount = (float) $summary->discount;
         $totalTax = (float) $summary->tax;
+        $taxPercentage = (float) (auth()->user()->business->tax_percentage ?? 0);
+
+        // Omzet bersih setelah pajak: dasar perhitungan laba kotor.
+        $netSales = max(0, $totalSales - $totalTax);
 
         // 2. Total item terjual real
         $itemsSoldQuery = DB::table('sale_items')
@@ -88,8 +92,8 @@ class ReportController extends Controller
         $totalCost = (float) $costQuery
             ->sum(DB::raw('sale_items.quantity * products.purchase_price'));
 
-        $grossProfit = max(0, $totalSales - $totalCost);
-        $profitMargin = $totalSales > 0 ? round(($grossProfit / $totalSales) * 100, 1) : 0;
+        $grossProfit = max(0, $netSales - $totalCost);
+        $profitMargin = $netSales > 0 ? round(($grossProfit / $netSales) * 100, 1) : 0;
 
         // 4. Perhitungan perbandingan periode sebelumnya untuk indikator pertumbuhan
         $prevSales = 0;
@@ -119,13 +123,15 @@ class ReportController extends Controller
         }
 
         if (in_array($period, ['today', '7days', 'month'])) {
-            $prevSummary = $prevQuery->selectRaw('COALESCE(SUM(total_amount), 0) as sales, COUNT(*) as transactions')->first();
+            $prevSummary = $prevQuery->selectRaw('COALESCE(SUM(total_amount), 0) as sales, COALESCE(SUM(tax_amount), 0) as tax, COUNT(*) as transactions')->first();
             $prevSales = (float) ($prevSummary->sales ?? 0);
+            $prevTax = (float) ($prevSummary->tax ?? 0);
             $prevTrans = (int) ($prevSummary->transactions ?? 0);
             $prevCost = (float) $prevCostQuery->sum(DB::raw('sale_items.quantity * products.purchase_price'));
         }
 
-        $prevProfit = max(0, $prevSales - $prevCost);
+        $prevNetSales = max(0, $prevSales - ($prevTax ?? 0));
+        $prevProfit = max(0, $prevNetSales - $prevCost);
         $prevAvg = $prevTrans > 0 ? round($prevSales / $prevTrans) : 0;
 
         $salesGrowth = $prevSales > 0 ? round((($totalSales - $prevSales) / $prevSales) * 100, 1) : ($totalSales > 0 ? 100 : 0);
@@ -143,9 +149,13 @@ class ReportController extends Controller
         $chartData = $dailySales->pluck('total')->map(fn ($t) => (float) $t)->toArray();
 
         // Hari Terbaik (Peak day) real
-        $bestDay = $dailySales->sortByDesc('total')->first();
-        $bestDayFormatted = $bestDay && $bestDay->total > 0 
-            ? Carbon::parse($bestDay->date)->locale('id')->isoFormat('ddd, D MMM') 
+        $bestDay = $dailySales
+            ->filter(fn ($day) => (float) $day->total > 0)
+            ->sortByDesc(fn ($day) => (float) $day->total)
+            ->first();
+
+        $bestDayFormatted = $bestDay
+            ? Carbon::parse($bestDay->date)->locale('id')->isoFormat('ddd, D MMM')
             : '-';
 
         // 6. Pembuatan Bar Chart Kapsul Real sesuai Periode
@@ -158,14 +168,14 @@ class ReportController extends Controller
             $endDay = max($currentDay, 20); // minimal 20 batang agar proporsi grafik tetap elegan
 
             for ($d = 1; $d <= min($daysInMonth, $endDay); $d++) {
-                $dateKey = Carbon::now()->format('Y-m-') . str_pad($d, 2, '0', STR_PAD_LEFT);
+                $dateKey = Carbon::now()->format('Y-m-').str_pad($d, 2, '0', STR_PAD_LEFT);
                 $dayTotal = (float) ($dailySales->get($dateKey)->total ?? 0);
                 $isPeak = ($dayTotal > 0 && $dayTotal == $maxSalesVal);
 
                 $height = $dayTotal > 0 ? max(28, round(($dayTotal / $maxSalesVal) * 160)) : 0;
-                $formattedVal = $dayTotal >= 1000000 
-                    ? round($dayTotal / 1000000, 1) . 'jt'
-                    : ($dayTotal >= 1000 ? round($dayTotal / 1000) . 'rb' : number_format($dayTotal, 0, ',', '.'));
+                $formattedVal = $dayTotal >= 1000000
+                    ? round($dayTotal / 1000000, 1).'jt'
+                    : ($dayTotal >= 1000 ? round($dayTotal / 1000).'rb' : number_format($dayTotal, 0, ',', '.'));
 
                 $chartBars[] = [
                     'day' => $d,
@@ -175,7 +185,7 @@ class ReportController extends Controller
                     'active' => $dayTotal > 0,
                     'peak' => $isPeak,
                     'height' => $height,
-                    'show_label' => ($d === 1 || $d % 5 === 0)
+                    'show_label' => ($d === 1 || $d % 5 === 0),
                 ];
             }
         } elseif ($period === '7days') {
@@ -186,9 +196,9 @@ class ReportController extends Controller
                 $isPeak = ($dayTotal > 0 && $dayTotal == $maxSalesVal);
 
                 $height = $dayTotal > 0 ? max(28, round(($dayTotal / $maxSalesVal) * 160)) : 0;
-                $formattedVal = $dayTotal >= 1000000 
-                    ? round($dayTotal / 1000000, 1) . 'jt'
-                    : ($dayTotal >= 1000 ? round($dayTotal / 1000) . 'rb' : number_format($dayTotal, 0, ',', '.'));
+                $formattedVal = $dayTotal >= 1000000
+                    ? round($dayTotal / 1000000, 1).'jt'
+                    : ($dayTotal >= 1000 ? round($dayTotal / 1000).'rb' : number_format($dayTotal, 0, ',', '.'));
 
                 $chartBars[] = [
                     'day' => $carbonDate->locale('id')->isoFormat('ddd'),
@@ -198,14 +208,48 @@ class ReportController extends Controller
                     'active' => $dayTotal > 0,
                     'peak' => $isPeak,
                     'height' => $height,
-                    'show_label' => true
+                    'show_label' => true,
+                ];
+            }
+        } elseif ($period === 'custom' && $dateFrom && $dateTo) {
+            $rangeStart = Carbon::parse($dateFrom)->startOfDay();
+            $rangeEnd = Carbon::parse($dateTo)->startOfDay();
+
+            if ($rangeStart->gt($rangeEnd)) {
+                [$rangeStart, $rangeEnd] = [$rangeEnd, $rangeStart];
+            }
+
+            // Batasi grafik agar tetap terbaca ketika rentang tanggal sangat panjang.
+            if ($rangeStart->diffInDays($rangeEnd) > 60) {
+                $rangeStart = $rangeEnd->copy()->subDays(60);
+            }
+
+            for ($date = $rangeStart->copy(); $date->lte($rangeEnd); $date->addDay()) {
+                $dateKey = $date->toDateString();
+                $dayTotal = (float) ($dailySales->get($dateKey)->total ?? 0);
+                $isPeak = ($dayTotal > 0 && $dayTotal == $maxSalesVal);
+
+                $height = $dayTotal > 0 ? max(28, round(($dayTotal / $maxSalesVal) * 160)) : 0;
+                $formattedVal = $dayTotal >= 1000000
+                    ? round($dayTotal / 1000000, 1).'jt'
+                    : ($dayTotal >= 1000 ? round($dayTotal / 1000).'rb' : number_format($dayTotal, 0, ',', '.'));
+
+                $chartBars[] = [
+                    'day' => $date->locale('id')->isoFormat('D MMM'),
+                    'date' => $dateKey,
+                    'val' => $dayTotal,
+                    'formatted_val' => $formattedVal,
+                    'active' => $dayTotal > 0,
+                    'peak' => $isPeak,
+                    'height' => $height,
+                    'show_label' => true,
                 ];
             }
         } else {
             // Hari ini (Today)
             $todayKey = Carbon::today()->toDateString();
             $todayTotal = (float) ($dailySales->get($todayKey)->total ?? 0);
-            $formattedVal = $todayTotal >= 1000 ? round($todayTotal / 1000) . 'rb' : number_format($todayTotal, 0, ',', '.');
+            $formattedVal = $todayTotal >= 1000 ? round($todayTotal / 1000).'rb' : number_format($todayTotal, 0, ',', '.');
             $chartBars[] = [
                 'day' => Carbon::today()->locale('id')->isoFormat('D MMM'),
                 'date' => $todayKey,
@@ -214,7 +258,7 @@ class ReportController extends Controller
                 'active' => $todayTotal > 0,
                 'peak' => $todayTotal > 0,
                 'height' => $todayTotal > 0 ? 140 : 0,
-                'show_label' => true
+                'show_label' => true,
             ];
         }
 
@@ -222,13 +266,13 @@ class ReportController extends Controller
         if ($period === 'today') {
             $dateRangeText = Carbon::today()->locale('id')->isoFormat('D MMM YYYY');
         } elseif ($period === '7days') {
-            $dateRangeText = Carbon::now()->subDays(6)->locale('id')->isoFormat('D') . '-' . Carbon::now()->locale('id')->isoFormat('D MMM YYYY');
+            $dateRangeText = Carbon::now()->subDays(6)->locale('id')->isoFormat('D').'-'.Carbon::now()->locale('id')->isoFormat('D MMM YYYY');
         } elseif ($period === 'month') {
-            $dateRangeText = '1-' . Carbon::now()->locale('id')->isoFormat('D MMM YYYY');
+            $dateRangeText = '1-'.Carbon::now()->locale('id')->isoFormat('D MMM YYYY');
         } elseif ($period === 'custom' && $dateFrom && $dateTo) {
-            $dateRangeText = Carbon::parse($dateFrom)->locale('id')->isoFormat('D MMM') . ' - ' . Carbon::parse($dateTo)->locale('id')->isoFormat('D MMM YYYY');
+            $dateRangeText = Carbon::parse($dateFrom)->locale('id')->isoFormat('D MMM').' - '.Carbon::parse($dateTo)->locale('id')->isoFormat('D MMM YYYY');
         } else {
-            $dateRangeText = '1-' . Carbon::now()->locale('id')->isoFormat('D MMM YYYY');
+            $dateRangeText = '1-'.Carbon::now()->locale('id')->isoFormat('D MMM YYYY');
         }
 
         // 8. Rincian Metode Pembayaran Real
@@ -237,7 +281,7 @@ class ReportController extends Controller
         $this->applySalesFilters($paymentQuery, $request);
         $paymentMethods = $paymentQuery->groupBy('payment_method')->orderByDesc('total')->get()->map(function ($pm) use ($totalSales) {
             $rawMethod = strtolower($pm->payment_method ?? 'tunai');
-            $pm->method_name = match($rawMethod) {
+            $pm->method_name = match ($rawMethod) {
                 'cash' => 'Tunai',
                 'qris' => 'QRIS',
                 'midtrans' => 'Midtrans',
@@ -246,6 +290,7 @@ class ReportController extends Controller
                 default => ucfirst($rawMethod)
             };
             $pm->percentage = $totalSales > 0 ? round(($pm->total / $totalSales) * 100, 1) : 0;
+
             return $pm;
         });
 
@@ -265,6 +310,7 @@ class ReportController extends Controller
             ->get()
             ->map(function ($cat) use ($totalSales) {
                 $cat->percentage = $totalSales > 0 ? round(($cat->total / $totalSales) * 100, 1) : 0;
+
                 return $cat;
             });
 
@@ -283,6 +329,7 @@ class ReportController extends Controller
             ->get()
             ->map(function ($c) use ($totalSales) {
                 $c->percentage = $totalSales > 0 ? round(($c->total / $totalSales) * 100, 1) : 0;
+
                 return $c;
             });
 
@@ -308,6 +355,7 @@ class ReportController extends Controller
             ->map(function ($p) {
                 $p->profit = max(0, $p->revenue - $p->cost);
                 $p->margin = $p->revenue > 0 ? round(($p->profit / $p->revenue) * 100, 1) : 0;
+
                 return $p;
             });
 
@@ -320,7 +368,7 @@ class ReportController extends Controller
             ->get()
             ->map(function ($s) {
                 $rawMethod = strtolower($s->payment_method ?? 'cash');
-                $methodName = match($rawMethod) {
+                $methodName = match ($rawMethod) {
                     'cash' => 'Tunai',
                     'qris' => 'QRIS',
                     'midtrans' => 'Midtrans',
@@ -329,20 +377,20 @@ class ReportController extends Controller
                     default => ucfirst($rawMethod)
                 };
 
-                return (object)[
+                return (object) [
                     'invoice_number' => $s->invoice_number,
                     'date_formatted' => Carbon::parse($s->transaction_date ?? $s->created_at)->locale('id')->isoFormat('D MMM, HH.mm'),
                     'cashier_name' => $s->user->name ?? 'Kasir',
                     'payment_method' => $methodName,
                     'total_amount' => $s->total_amount,
-                    'status' => $s->status === 'completed' ? 'Lunas' : ucfirst($s->status)
+                    'status' => $s->status === 'completed' ? 'Lunas' : ucfirst($s->status),
                 ];
             });
 
         return view('reports.sales', compact(
             'totalSales', 'transactionCount', 'averagePerTransaction', 'grossProfit', 'profitMargin',
             'salesGrowth', 'transactionGrowth', 'avgGrowth', 'profitGrowth',
-            'totalItemsSold', 'totalDiscount', 'totalTax', 'bestDayFormatted', 'dateRangeText',
+            'totalItemsSold', 'totalDiscount', 'totalTax', 'taxPercentage', 'bestDayFormatted', 'dateRangeText',
             'chartBars', 'dailySales', 'chartLabels', 'chartData', 'paymentMethods', 'categoryBreakdown', 'cashierBreakdown',
             'topProducts', 'recentSales', 'period', 'dateFrom', 'dateTo', 'search'
         ));
@@ -360,7 +408,7 @@ class ReportController extends Controller
             $kasir = $sale->user->name ?? '-';
             $waktu = $sale->transaction_date ?? $sale->created_at;
             $rawMethod = strtolower($sale->payment_method ?? 'cash');
-            $methodName = match($rawMethod) {
+            $methodName = match ($rawMethod) {
                 'cash' => 'Tunai',
                 'qris' => 'QRIS',
                 'midtrans' => 'Midtrans',
@@ -391,7 +439,7 @@ class ReportController extends Controller
         $html .= '<table><thead><tr><th>No. Nota</th><th>Waktu</th><th>Kasir</th><th>Metode</th><th style="text-align:right">Total</th></tr></thead><tbody>';
         foreach ($sales as $sale) {
             $rawMethod = strtolower($sale->payment_method ?? 'cash');
-            $methodName = match($rawMethod) {
+            $methodName = match ($rawMethod) {
                 'cash' => 'Tunai',
                 'qris' => 'QRIS',
                 'midtrans' => 'Midtrans',

@@ -34,7 +34,7 @@ class RegistrationTest extends TestCase
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect(route('onboarding.show', absolute: false));
+        $response->assertRedirect(route('dashboard', absolute: false));
 
         // Verify business was created
         $business = Business::where('name', 'Test Business')->first();

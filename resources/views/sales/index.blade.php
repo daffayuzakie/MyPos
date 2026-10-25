@@ -12,7 +12,7 @@
             <p class="text-[#75929E] text-sm">Lihat, cetak ulang struk, dan proses retur pesanan kasir</p>
         </div>
         <div>
-            <a href="{{ route('pos.index') }}" class="pos-btn-primary text-xs flex items-center gap-1.5 bg-[#0d6e53] hover:bg-[#095741]">
+            <a href="{{ route('pos.index') }}" class="pos-btn-primary text-xs flex items-center gap-1.5 bg-[#4D869C] hover:bg-[#3D6B7D]">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                 Ke Layar Kasir
             </a>
@@ -20,7 +20,7 @@
     </div>
 
     @if(session('success'))
-    <div class="mb-4 p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-semibold flex items-center gap-2">
+    <div class="mb-4 p-3 bg-[#CDE8E5] border border-[#B6D9D5] text-[#1D3B47] rounded-xl text-xs font-semibold flex items-center gap-2">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
         {{ session('success') }}
     </div>
@@ -28,35 +28,35 @@
 
     <div class="pos-card p-0 overflow-hidden">
         <!-- Filter Toolbar -->
-        <div class="p-4 border-b border-gray-200 bg-gray-50 flex flex-wrap gap-4 items-center justify-between">
+        <div class="p-4 border-b border-[#D6E5ED] bg-[#EEF7FF] flex flex-wrap gap-4 items-center justify-between">
             <div class="flex gap-2">
                 <a href="?status={{ $search ? '&search=' . urlencode($search) : '' }}" 
-                   class="px-4 py-2 rounded-full text-xs font-bold transition-colors {{ empty($status) ? 'bg-[#4D869C] text-white' : 'bg-white text-[#1D3B47] hover:bg-gray-100 border border-gray-200' }}">
+                   class="px-4 py-2 rounded-full text-xs font-bold transition-colors {{ empty($status) ? 'bg-[#4D869C] text-white' : 'bg-[#CDE8E5] text-[#1D3B47] hover:bg-[#b8ded9]' }}">
                     Semua
                 </a>
                 <a href="?status=completed{{ $search ? '&search=' . urlencode($search) : '' }}" 
-                   class="px-4 py-2 rounded-full text-xs font-bold transition-colors {{ ($status ?? '') === 'completed' ? 'bg-[#0d6e53] text-white' : 'bg-white text-[#1D3B47] hover:bg-gray-100 border border-gray-200' }}">
+                   class="px-4 py-2 rounded-full text-xs font-bold transition-colors {{ ($status ?? '') === 'completed' ? 'bg-[#4D869C] text-white' : 'bg-[#CDE8E5] text-[#1D3B47] hover:bg-[#b8ded9]' }}">
                     Selesai
                 </a>
                 <a href="?status=refunded{{ $search ? '&search=' . urlencode($search) : '' }}" 
-                   class="px-4 py-2 rounded-full text-xs font-bold transition-colors {{ ($status ?? '') === 'refunded' ? 'bg-rose-600 text-white' : 'bg-white text-[#1D3B47] hover:bg-gray-100 border border-gray-200' }}">
+                   class="px-4 py-2 rounded-full text-xs font-bold transition-colors {{ ($status ?? '') === 'refunded' ? 'bg-[#d9383a] text-white' : 'bg-[#CDE8E5] text-[#1D3B47] hover:bg-[#b8ded9]' }}">
                     Diretur
                 </a>
             </div>
             
             <form method="GET" class="flex flex-wrap gap-2.5 items-center">
                 <input type="hidden" name="status" value="{{ $status ?? '' }}">
-                <input type="date" name="date_from" value="{{ $dateFrom ?? '' }}" class="border border-[#D6E5ED] rounded-xl text-xs px-3 py-1.5 focus:ring-teal-700 focus:border-teal-700 bg-white" title="Dari Tanggal">
+                <input type="date" name="date_from" value="{{ $dateFrom ?? '' }}" class="border border-[#D6E5ED] rounded-xl text-xs px-3 py-1.5 focus:ring-[#4D869C] focus:border-[#4D869C] bg-white" title="Dari Tanggal">
                 <span class="text-xs text-gray-400">-</span>
-                <input type="date" name="date_to" value="{{ $dateTo ?? '' }}" class="border border-[#D6E5ED] rounded-xl text-xs px-3 py-1.5 focus:ring-teal-700 focus:border-teal-700 bg-white" title="Sampai Tanggal">
-                <button type="submit" class="px-3 py-1.5 bg-[#3D6B7D] hover:bg-[#4D869C] text-white text-xs font-bold rounded-xl">Filter</button>
+                <input type="date" name="date_to" value="{{ $dateTo ?? '' }}" class="border border-[#D6E5ED] rounded-xl text-xs px-3 py-1.5 focus:ring-[#4D869C] focus:border-[#4D869C] bg-white" title="Sampai Tanggal">
+                <button type="submit" class="px-3 py-1.5 bg-[#4D869C] hover:bg-[#3D6B7D] text-white text-xs font-bold rounded-xl">Filter</button>
             </form>
         </div>
 
         <!-- Sales Table -->
         <div class="overflow-x-auto">
             <table class="w-full text-left text-xs text-[#75929E]">
-                <thead class="text-[11px] text-[#75929E] uppercase bg-gray-50 border-b border-gray-200 font-bold">
+                <thead class="text-[11px] text-[#75929E] uppercase bg-[#EEF7FF] border-b border-[#D6E5ED] font-bold">
                     <tr>
                         <th scope="col" class="px-5 py-3.5">No. Nota</th>
                         <th scope="col" class="px-5 py-3.5">Waktu Transaksi</th>
@@ -70,24 +70,24 @@
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     @forelse($sales ?? [] as $sale)
-                    <tr class="bg-white hover:bg-gray-50/80 transition-colors">
+                    <tr class="bg-white hover:bg-[#EEF7FF] transition-colors">
                         <td class="px-5 py-3.5 font-bold font-mono text-[#1D3B47]">{{ $sale->invoice_number }}</td>
                         <td class="px-5 py-3.5">{{ $sale->transaction_date ? \Carbon\Carbon::parse($sale->transaction_date)->format('d M Y, H:i') : $sale->created_at->format('d M Y, H:i') }}</td>
                         <td class="px-5 py-3.5">{{ $sale->user->name ?? '-' }}</td>
                         <td class="px-5 py-3.5 font-medium text-[#1D3B47]">{{ $sale->customer->name ?? 'Pelanggan Umum' }}</td>
-                        <td class="px-5 py-3.5 font-extrabold text-gray-950">Rp {{ number_format($sale->total_amount, 0, ',', '.') }}</td>
+                        <td class="px-5 py-3.5 font-extrabold text-[#1D3B47]">Rp {{ number_format($sale->total_amount, 0, ',', '.') }}</td>
                         <td class="px-5 py-3.5">
-                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-gray-100 text-[#1D3B47]">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-[#EEF7FF] border border-[#D6E5ED] text-[#1D3B47]">
                                 {{ $sale->payment_method ?? 'cash' }}
                             </span>
                         </td>
                         <td class="px-5 py-3.5">
                             @if($sale->status == 'completed')
-                                <span class="bg-emerald-50 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200">Selesai</span>
+                                <span class="bg-[#CDE8E5] text-[#1D3B47] text-[10px] font-bold px-2 py-0.5 rounded-full border border-[#B6D9D5]">Selesai</span>
                             @elseif($sale->status == 'pending')
-                                <span class="bg-yellow-50 text-yellow-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-yellow-200">Menunggu</span>
+                                <span class="bg-[#EEF7FF] text-[#4D869C] text-[10px] font-bold px-2 py-0.5 rounded-full border border-[#D6E5ED]">Menunggu</span>
                             @elseif($sale->status == 'refunded')
-                                <span class="bg-rose-50 text-rose-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-rose-200">Diretur</span>
+                                <span class="bg-[#ffe8e8] text-[#d9383a] text-[10px] font-bold px-2 py-0.5 rounded-full border border-[#f5c2c2]">Diretur</span>
                             @elseif($sale->status == 'cancelled')
                                 <span class="bg-gray-100 text-[#1D3B47] text-[10px] font-bold px-2 py-0.5 rounded-full border border-gray-200">Dibatalkan</span>
                             @else
@@ -95,10 +95,10 @@
                             @endif
                         </td>
                         <td class="px-5 py-3.5 text-right space-x-2">
-                            <button @click="showDetail({{ json_encode($sale) }})" class="text-teal-700 hover:text-teal-900 font-bold text-xs">Detail</button>
+                            <button @click="showDetail({{ json_encode($sale) }})" class="text-[#4D869C] hover:text-[#3D6B7D] font-bold text-xs">Detail</button>
                             <button @click="printInvoice({{ json_encode($sale) }})" class="text-[#75929E] hover:text-[#1D3B47] font-bold text-xs">Cetak</button>
                             @if($sale->status == 'completed')
-                            <button @click="openRefundModal({{ json_encode($sale) }})" class="text-rose-600 hover:text-rose-800 font-bold text-xs">Retur</button>
+                            <button @click="openRefundModal({{ json_encode($sale) }})" class="text-[#d9383a] hover:text-[#b91c1c] font-bold text-xs">Retur</button>
                             @endif
                         </td>
                     </tr>

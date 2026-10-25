@@ -9,37 +9,37 @@
         <div class="flex flex-wrap items-center justify-between gap-2.5">
             <div class="flex flex-wrap items-center gap-2">
                 <a href="?period=today" 
-                   class="{{ ($period ?? 'month') === 'today' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'bg-white text-[#1D3B47] hover:text-black font-semibold' }} px-5 py-2 rounded-full text-xs sm:text-sm transition-all">
+                   class="{{ ($period ?? 'month') === 'today' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'bg-[#CDE8E5] text-[#1D3B47] hover:bg-[#b8ded9] font-bold' }} px-5 py-2 rounded-full text-xs sm:text-sm transition-all">
                     Hari ini
                 </a>
                 <a href="?period=7days" 
-                   class="{{ ($period ?? 'month') === '7days' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'bg-white text-[#1D3B47] hover:text-black font-semibold' }} px-5 py-2 rounded-full text-xs sm:text-sm transition-all">
+                   class="{{ ($period ?? 'month') === '7days' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'bg-[#CDE8E5] text-[#1D3B47] hover:bg-[#b8ded9] font-bold' }} px-5 py-2 rounded-full text-xs sm:text-sm transition-all">
                     7 hari
                 </a>
                 <a href="?period=month" 
-                   class="{{ ($period ?? 'month') === 'month' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'bg-white text-[#1D3B47] hover:text-black font-semibold' }} px-5 py-2 rounded-full text-xs sm:text-sm transition-all">
+                   class="{{ ($period ?? 'month') === 'month' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'bg-[#CDE8E5] text-[#1D3B47] hover:bg-[#b8ded9] font-bold' }} px-5 py-2 rounded-full text-xs sm:text-sm transition-all">
                     Bulan ini
                 </a>
                 <button type="button" @click="showCustomModal = true" 
-                        class="{{ ($period ?? 'month') === 'custom' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'bg-white text-[#1D3B47] hover:text-black font-semibold' }} px-5 py-2 rounded-full text-xs sm:text-sm transition-all">
+                        class="{{ ($period ?? 'month') === 'custom' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'bg-[#CDE8E5] text-[#1D3B47] hover:bg-[#b8ded9] font-bold' }} px-5 py-2 rounded-full text-xs sm:text-sm transition-all">
                     Kustom
                 </button>
             </div>
 
             <!-- Date Range, Branch, & Exports on Desktop / Mobile wrap -->
             <div class="flex flex-wrap items-center gap-2">
-                <span class="bg-white text-[#1D3B47] font-semibold px-4 py-2 rounded-full text-xs sm:text-sm">
+                <span class="bg-[#CDE8E5] text-[#1D3B47] font-semibold px-4 py-2 rounded-full text-xs sm:text-sm">
                     {{ $dateRangeText }}
                 </span>
-                <span class="bg-white text-[#1D3B47] font-semibold px-4 py-2 rounded-full text-xs sm:text-sm">
+                <span class="bg-[#CDE8E5] text-[#1D3B47] font-semibold px-4 py-2 rounded-full text-xs sm:text-sm">
                     Semua cabang
                 </span>
                 <a href="{{ route('reports.sales.export-excel', request()->query()) }}" 
-                   class="bg-white hover:bg-gray-200 text-[#1D3B47] font-semibold px-5 py-2 rounded-full text-xs sm:text-sm transition-all">
+                   class="bg-[#CDE8E5] hover:bg-[#b8ded9] text-[#1D3B47] font-semibold px-5 py-2 rounded-full text-xs sm:text-sm transition-all">
                     Excel
                 </a>
                 <a href="{{ route('reports.sales.export-pdf', request()->query()) }}" 
-                   class="bg-[#4D869C] hover:bg-[#28303f] text-white font-bold px-5 py-2 rounded-full text-xs sm:text-sm transition-all shadow-xs">
+                   class="bg-[#4D869C] hover:bg-[#3D6B7D] text-white font-bold px-5 py-2 rounded-full text-xs sm:text-sm transition-all shadow-xs">
                     PDF
                 </a>
             </div>
@@ -62,7 +62,8 @@
             </div>
         </div>
 
-        <!-- Card 2: Transaksi -->`n        <div class="bg-[#EEF7FF] rounded-3xl p-5 md:p-6 shadow-xs flex flex-col justify-between min-h-[135px]">
+        <!-- Card 2: Transaksi -->
+        <div class="bg-white border border-[#D6E5ED] rounded-3xl p-5 md:p-6 shadow-xs flex flex-col justify-between min-h-[135px]">
             <div class="text-[#75929E] text-xs sm:text-sm font-medium">Transaksi</div>
             <div class="text-[#1D3B47] font-black text-2xl sm:text-3xl lg:text-4xl tracking-tight mt-1">
                 {{ $transactionCount }}
@@ -74,7 +75,8 @@
             </div>
         </div>
 
-        <!-- Card 3: Rata-rata transaksi -->`n        <div class="bg-[#EEF7FF] rounded-3xl p-5 md:p-6 shadow-xs flex flex-col justify-between min-h-[135px]">
+        <!-- Card 3: Rata-rata transaksi -->
+        <div class="bg-white border border-[#D6E5ED] rounded-3xl p-5 md:p-6 shadow-xs flex flex-col justify-between min-h-[135px]">
             <div class="text-[#75929E] text-xs sm:text-sm font-medium">Rata-rata transaksi</div>
             <div class="text-[#1D3B47] font-black text-xl sm:text-2xl lg:text-3xl tracking-tight mt-1">
                 Rp {{ number_format($averagePerTransaction, 0, ',', '.') }}
@@ -86,7 +88,8 @@
             </div>
         </div>
 
-        <!-- Card 4: Laba kotor -->`n        <div class="bg-[#EEF7FF] rounded-3xl p-5 md:p-6 shadow-xs flex flex-col justify-between min-h-[135px]">
+        <!-- Card 4: Laba kotor -->
+        <div class="bg-white border border-[#D6E5ED] rounded-3xl p-5 md:p-6 shadow-xs flex flex-col justify-between min-h-[135px]">
             <div class="text-[#75929E] text-xs sm:text-sm font-medium">Laba kotor</div>
             <div class="text-[#1D3B47] font-black text-xl sm:text-2xl lg:text-3xl tracking-tight mt-1">
                 Rp {{ number_format($grossProfit, 0, ',', '.') }}
@@ -103,7 +106,7 @@
 
     </div>
 
-    <!-- Secondary Metrics Summary Card (Row 2: Item terjual, Diskon, PPN 12%, Hari terbaik) -->
+    <!-- Secondary Metrics Summary Card (Row 2: Item terjual, Diskon, Pajak, Hari terbaik) -->
     <div class="bg-white rounded-3xl p-5 sm:p-6 shadow-xs">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-0 md:divide-x divide-gray-300/80">
             <!-- Item terjual -->
@@ -120,9 +123,11 @@
                     Rp {{ number_format($totalDiscount, 0, ',', '.') }}
                 </div>
             </div>
-            <!-- PPN 12% -->
+            <!-- Pajak (mengikuti pengaturan usaha) -->
             <div class="md:px-4">
-                <div class="text-xs text-[#75929E] font-medium">PPN 12%</div>
+                <div class="text-xs text-[#75929E] font-medium">
+                    Pajak{{ $taxPercentage > 0 ? ' '.rtrim(rtrim(number_format($taxPercentage, 2, ',', '.'), '0'), ',').'%' : '' }}
+                </div>
                 <div class="text-xl sm:text-2xl font-black text-[#1D3B47] mt-1">
                     Rp {{ number_format($totalTax, 0, ',', '.') }}
                 </div>
@@ -278,7 +283,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-300/50">
                     @forelse($topProducts as $index => $product)
-                    <tr class="hover:bg-white/40 transition-colors">
+                    <tr class="hover:bg-[#EEF7FF] transition-colors">
                         <!-- Rank & Product Name -->
                         <td class="py-3.5 font-bold text-[#1D3B47]">
                             {{ $index + 1 }}. {{ $product->name }}
@@ -338,7 +343,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-300/50">
                     @forelse($recentSales as $sale)
-                    <tr class="hover:bg-white/40 transition-colors">
+                    <tr class="hover:bg-[#EEF7FF] transition-colors">
                         <!-- No. Nota -->
                         <td class="py-3.5 font-bold text-[#1D3B47] font-mono text-xs">
                             #{{ $sale->invoice_number }}

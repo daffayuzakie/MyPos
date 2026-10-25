@@ -35,13 +35,16 @@ class BusinessController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email', 'unique:businesses,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'business_code' => ['nullable', 'string', 'max:255'],
+            'type' => ['nullable', 'string', 'max:255'],
         ]);
 
         return DB::transaction(function () use ($request) {
             // Ensure admin role exists before transaction
             $adminRole = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
 
-            $slug = Str::slug($request->input('business_name'));
+            $customCode = $request->input('business_code');
+            $slug = $customCode ? Str::slug($customCode) : Str::slug($request->input('business_name'));
             $originalSlug = $slug;
             $count = 1;
 
@@ -57,6 +60,7 @@ class BusinessController extends Controller
                 'name' => $request->input('business_name'),
                 'slug' => $slug,
                 'email' => $request->input('email'),
+                'type' => $request->input('type', 'retail_store'),
             ]);
 
             $user = User::create([
@@ -71,7 +75,7 @@ class BusinessController extends Controller
 
             Auth::login($user);
 
-            return redirect()->route('onboarding.show');
+            return redirect()->route('dashboard');
         });
     }
 

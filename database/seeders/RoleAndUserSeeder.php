@@ -19,7 +19,6 @@ class RoleAndUserSeeder extends Seeder
             'products view', 'products create', 'products edit', 'products delete',
             'categories view', 'categories create', 'categories edit', 'categories delete',
             'sales view-all', 'sales view-own', 'sales create', 'sales cancel',
-            'purchases view', 'purchases create', 'purchases edit',
             'users view', 'users create', 'users edit', 'users deactivate',
             'reports view', 'business settings',
             'stock view', 'stock create',
@@ -43,7 +42,6 @@ class RoleAndUserSeeder extends Seeder
             'products view', 'products create', 'products edit', 'products delete',
             'categories view', 'categories create', 'categories edit', 'categories delete',
             'sales view-all', 'sales view-own', 'sales create', 'sales cancel',
-            'purchases view', 'purchases create', 'purchases edit',
             'users view',
             'reports view',
             'stock view', 'stock create',
@@ -59,7 +57,6 @@ class RoleAndUserSeeder extends Seeder
             'sales view-all',
             'sales view-own',
             'sales create',
-            'purchases view',
             'reports view',
             'stock view',
         ];

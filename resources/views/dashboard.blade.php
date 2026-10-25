@@ -1,4 +1,4 @@
-﻿@extends('layouts.pos')
+@extends('layouts.pos')
 
 @section('content')
 @php
@@ -43,24 +43,24 @@
             </div>
         </div>
 
-        <!-- Card 2: Transaksi (Soft Ice-blue Card #EEF7FF) -->
-        <div class="bg-[#EEF7FF] rounded-3xl p-5 md:p-6 shadow-xs flex flex-col justify-between min-h-[125px]">
+        <!-- Card 2: Transaksi -->
+        <div class="bg-white border border-[#D6E5ED] rounded-3xl p-5 md:p-6 shadow-xs flex flex-col justify-between min-h-[125px]">
             <div class="text-[#1D3B47]/70 text-xs sm:text-sm font-semibold">Transaksi</div>
             <div class="text-[#1D3B47] font-black text-2xl sm:text-3xl lg:text-4xl tracking-tight mt-2">
                 {{ $todayTransactions ?? 0 }}
             </div>
         </div>
 
-        <!-- Card 3: Rata-rata (Soft Ice-blue Card #EEF7FF) -->
-        <div class="bg-[#EEF7FF] rounded-3xl p-5 md:p-6 shadow-xs flex flex-col justify-between min-h-[125px]">
+        <!-- Card 3: Rata-rata -->
+        <div class="bg-white border border-[#D6E5ED] rounded-3xl p-5 md:p-6 shadow-xs flex flex-col justify-between min-h-[125px]">
             <div class="text-[#1D3B47]/70 text-xs sm:text-sm font-semibold">Rata-rata</div>
             <div class="text-[#1D3B47] font-black text-xl sm:text-2xl lg:text-3xl xl:text-4xl tracking-tight mt-2">
                 Rp {{ number_format($averageTransaction ?? 0, 0, ',', '.') }}
             </div>
         </div>
 
-        <!-- Card 4: Stok Rendah (Soft Ice-blue Card with Red #d9383a) -->
-        <div class="bg-[#EEF7FF] rounded-3xl p-5 md:p-6 shadow-xs flex flex-col justify-between min-h-[125px]">
+        <!-- Card 4: Stok Rendah (Red accent #d9383a) -->
+        <div class="bg-white border border-[#D6E5ED] rounded-3xl p-5 md:p-6 shadow-xs flex flex-col justify-between min-h-[125px]">
             <div class="text-[#1D3B47]/70 text-xs sm:text-sm font-semibold">Stok rendah</div>
             <div class="text-[#d9383a] font-black text-2xl sm:text-3xl lg:text-4xl tracking-tight mt-2">
                 {{ $lowStockCount ?? 0 }}
@@ -73,7 +73,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 md:gap-6 items-start">
         
         <!-- Left Container: Bar Chart Card (7 hari terakhir) -->
-        <div class="lg:col-span-7 xl:col-span-8 bg-[#EEF7FF] rounded-3xl p-5 sm:p-6 md:p-8 shadow-xs flex flex-col justify-between min-h-[440px]">
+        <div class="lg:col-span-7 xl:col-span-8 bg-white border border-[#D6E5ED] rounded-3xl p-5 sm:p-6 md:p-8 shadow-xs flex flex-col justify-between min-h-[440px]">
             
             <!-- Card Header: Title & Period Filters -->
             <div class="flex items-start justify-between gap-2 mb-6">
@@ -90,17 +90,17 @@
                         @endif
                     </h3>
                 </div>
-                <div class="flex flex-wrap items-center justify-end gap-1 sm:gap-2 text-xs md:text-sm">
+                <div class="flex flex-wrap items-center justify-end gap-1.5 sm:gap-2 text-xs md:text-sm">
                     <a href="{{ route('dashboard', ['period' => 'today']) }}" 
-                       class="{{ $period === 'today' ? 'bg-[#4D869C] text-white px-3.5 sm:px-4 py-1.5 rounded-full font-bold shadow-xs' : 'text-[#1D3B47] hover:text-black font-semibold px-2.5 sm:px-3 py-1.5 transition-colors' }}">
+                       class="{{ $period === 'today' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'bg-[#CDE8E5] text-[#1D3B47] hover:bg-[#b8ded9] font-bold' }} px-4 py-2 rounded-full transition-colors text-xs">
                         Hari ini
                     </a>
                     <a href="{{ route('dashboard', ['period' => '7days']) }}" 
-                       class="{{ $period === '7days' ? 'bg-[#4D869C] text-white px-3.5 sm:px-4 py-1.5 rounded-full font-bold shadow-xs' : 'text-[#1D3B47] hover:text-black font-semibold px-2.5 sm:px-3 py-1.5 transition-colors' }}">
+                       class="{{ $period === '7days' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'bg-[#CDE8E5] text-[#1D3B47] hover:bg-[#b8ded9] font-bold' }} px-4 py-2 rounded-full transition-colors text-xs">
                         7 hari
                     </a>
                     <a href="{{ route('dashboard', ['period' => 'month']) }}" 
-                       class="{{ $period === 'month' ? 'bg-[#4D869C] text-white px-3.5 sm:px-4 py-1.5 rounded-full font-bold shadow-xs' : 'text-[#1D3B47] hover:text-black font-semibold px-2.5 sm:px-3 py-1.5 transition-colors' }}">
+                       class="{{ $period === 'month' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'bg-[#CDE8E5] text-[#1D3B47] hover:bg-[#b8ded9] font-bold' }} px-4 py-2 rounded-full transition-colors text-xs">
                         Bulan ini
                     </a>
                 </div>
@@ -144,7 +144,7 @@
         <div class="lg:col-span-5 xl:col-span-4 flex flex-col gap-5 md:gap-6">
             
             <!-- Terlaris Card -->
-            <div class="bg-[#EEF7FF] rounded-3xl p-5 sm:p-6 shadow-xs">
+            <div class="bg-white border border-[#D6E5ED] rounded-3xl p-5 sm:p-6 shadow-xs">
                 <h3 class="font-black text-lg text-[#1D3B47] tracking-tight mb-5">Terlaris</h3>
                 
                 <div class="space-y-4">
@@ -172,12 +172,12 @@
             </div>
 
             <!-- Peringatan Stok Card -->
-            <div class="bg-[#EEF7FF] rounded-3xl p-5 sm:p-6 shadow-xs">
+            <div class="bg-white border border-[#D6E5ED] rounded-3xl p-5 sm:p-6 shadow-xs">
                 <h3 class="font-black text-lg text-[#1D3B47] tracking-tight mb-4">Peringatan stok</h3>
                 
                 <div class="space-y-3">
                     @forelse($lowStockProducts ?? [] as $product)
-                    <div class="bg-[#e4eff3] rounded-2xl p-4 flex items-center justify-between text-[#1D3B47] shadow-xs">
+                    <div class="bg-white border-l-4 border-[#b91c1c] border-y border-r border-[#D6E5ED] rounded-2xl p-4 flex items-center justify-between text-[#1D3B47] shadow-xs">
                         <div class="min-w-0 pr-3">
                             <h4 class="font-bold text-sm sm:text-base text-[#1D3B47] leading-tight truncate">{{ $product->name }}</h4>
                             <p class="text-xs text-[#75929E] font-semibold uppercase tracking-wider mt-0.5">{{ $product->sku }}</p>

@@ -23,7 +23,6 @@ class Business extends Model
         'logo',
         'tax_percentage',
         'payment_methods',
-        'onboarded_at',
         'invoice_prefix',
         'invoice_sequence',
     ];
@@ -33,7 +32,6 @@ class Business extends Model
     protected $casts = [
         'tax_percentage' => 'decimal:2',
         'payment_methods' => 'array',
-        'onboarded_at' => 'datetime',
     ];
 
     public function getLogoUrlAttribute(): ?string

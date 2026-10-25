@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -142,15 +142,15 @@
                     @yield('topbar-search')
                 @else
                     <div class="w-full relative">
-                        <input type="text" placeholder="Cari" class="w-full bg-[#CDE8E5] border-0 rounded-full px-5 py-2.5 text-sm text-[#1D3B47] placeholder-[#75929E] focus:outline-none focus:ring-2 focus:ring-[#4D869C] transition-all">
+                        <input type="text" placeholder="Cari" class="w-full bg-[#edf5fa] border border-[#d6e5ed]/60 rounded-full px-5 py-2.5 text-sm text-[#1D3B47] placeholder-[#75929E] focus:outline-none focus:ring-2 focus:ring-[#4D869C] transition-all">
                     </div>
                 @endif
             </div>
 
             <!-- Right: Online Badge -->
             <div class="flex items-center gap-3 shrink-0">
-                <div class="flex items-center gap-2 px-4 py-2 bg-[#CDE8E5] rounded-full">
-                    <span class="w-2.5 h-2.5 rounded-full" :class="$store.app?.isOnline !== false ? 'bg-[#4D869C]' : 'bg-[#d9383a]'"></span>
+                <div class="flex items-center gap-2 px-3.5 py-1.5 bg-white border border-[#D6E5ED] rounded-full shadow-xs">
+                    <span class="w-2.5 h-2.5 rounded-full" :class="$store.app?.isOnline !== false ? 'bg-[#406a77]' : 'bg-[#d9383a]'"></span>
                     <span class="text-xs font-bold text-[#1D3B47]" x-text="$store.app?.isOnline !== false ? 'Online' : 'Offline'">Online</span>
                 </div>
             </div>

@@ -3,7 +3,7 @@
 @section('topbar-search')
     <form method="GET" action="{{ route('users.index') }}" class="w-full relative">
         <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama atau email..." 
-               class="w-full bg-[#e6e8eb] border-0 rounded-full px-5 py-2.5 text-sm text-[#1D3B47] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#4D869C] transition-all">
+               class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-full px-5 py-2.5 text-sm text-[#1D3B47] placeholder-[#75929E] focus:outline-none focus:ring-2 focus:ring-[#4D869C] transition-all">
     </form>
 @endsection
 
@@ -71,17 +71,17 @@
         <!-- Tabs -->
         <div class="flex flex-wrap items-center gap-2">
             <button @click="activeTab = 'employees'" 
-                    :class="activeTab === 'employees' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'bg-white text-[#1D3B47] hover:text-black font-semibold'"
+                    :class="activeTab === 'employees' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'bg-[#CDE8E5] text-[#1D3B47] hover:bg-[#b8ded9] font-semibold'"
                     class="px-5 py-2 rounded-full text-xs sm:text-sm transition-all">
                 Karyawan
             </button>
             <button @click="activeTab = 'permissions'" 
-                    :class="activeTab === 'permissions' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'bg-white text-[#1D3B47] hover:text-black font-semibold'"
+                    :class="activeTab === 'permissions' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'bg-[#CDE8E5] text-[#1D3B47] hover:bg-[#b8ded9] font-semibold'"
                     class="px-5 py-2 rounded-full text-xs sm:text-sm transition-all">
                 Hak akses
             </button>
             <button @click="activeTab = 'logs'" 
-                    :class="activeTab === 'logs' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'bg-white text-[#1D3B47] hover:text-black font-semibold'"
+                    :class="activeTab === 'logs' ? 'bg-[#4D869C] text-white font-bold shadow-xs' : 'bg-[#CDE8E5] text-[#1D3B47] hover:bg-[#b8ded9] font-semibold'"
                     class="px-5 py-2 rounded-full text-xs sm:text-sm transition-all">
                 Log aktivitas
             </button>
@@ -90,14 +90,14 @@
         <!-- Action Button -->
         <div>
             <button @click="showCreateModal = true" 
-                    class="bg-[#1D3B47] hover:bg-[#1a1f2c] text-white font-bold px-6 py-2.5 rounded-full text-xs sm:text-sm transition-all shadow-xs flex items-center gap-1.5 cursor-pointer">
+                    class="bg-[#4D869C] hover:bg-[#3D6B7D] text-white font-bold px-6 py-2.5 rounded-full text-xs sm:text-sm transition-all shadow-xs flex items-center gap-1.5 cursor-pointer">
                 + Tambah karyawan
             </button>
         </div>
     </div>
 
     <!-- Main Workspace: FULL-WIDTH TABLE DATA KARYAWAN (Matching Karyawan.png) -->
-    <div class="bg-white rounded-3xl p-5 sm:p-6 shadow-xs overflow-hidden">
+    <div class="bg-white border border-[#D6E5ED] rounded-3xl p-5 sm:p-6 shadow-xs overflow-hidden">
         
         <!-- TAB 1: Karyawan Table -->
         <div x-show="activeTab === 'employees'" class="overflow-x-auto">
@@ -113,7 +113,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-300/70">
                     @forelse($users as $u)
-                    <tr class="hover:bg-white/40 transition-colors">
+                    <tr class="hover:bg-[#EEF7FF] transition-colors">
                         <!-- Nama & Avatar -->
                         <td class="py-3.5 pr-3">
                             <div class="flex items-center gap-3 min-w-0">
@@ -215,27 +215,27 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-300/70">
-                    <tr class="hover:bg-white/40">
+                    <tr class="hover:bg-[#EEF7FF]">
                         <td class="py-3 font-bold text-[#1D3B47]">Kasir & Checkout Penjualan</td>
                         <td class="py-3 text-center"><input type="checkbox" checked disabled class="w-4 h-4 text-[#4D869C] rounded"></td>
                         <td class="py-3 text-center"><input type="checkbox" checked disabled class="w-4 h-4 text-[#4D869C] rounded"></td>
                     </tr>
-                    <tr class="hover:bg-white/40">
+                    <tr class="hover:bg-[#EEF7FF]">
                         <td class="py-3 font-bold text-[#1D3B47]">Retur & Refund Transaksi</td>
                         <td class="py-3 text-center"><input type="checkbox" checked disabled class="w-4 h-4 text-[#4D869C] rounded"></td>
                         <td class="py-3 text-center"><input type="checkbox" disabled class="w-4 h-4 text-gray-300 rounded"></td>
                     </tr>
-                    <tr class="hover:bg-white/40">
+                    <tr class="hover:bg-[#EEF7FF]">
                         <td class="py-3 font-bold text-[#1D3B47]">Kelola Produk & Stok</td>
                         <td class="py-3 text-center"><input type="checkbox" checked disabled class="w-4 h-4 text-[#4D869C] rounded"></td>
                         <td class="py-3 text-center"><input type="checkbox" disabled class="w-4 h-4 text-gray-300 rounded"></td>
                     </tr>
-                    <tr class="hover:bg-white/40">
+                    <tr class="hover:bg-[#EEF7FF]">
                         <td class="py-3 font-bold text-[#1D3B47]">Laporan Penjualan & Keuangan</td>
                         <td class="py-3 text-center"><input type="checkbox" checked disabled class="w-4 h-4 text-[#4D869C] rounded"></td>
                         <td class="py-3 text-center"><input type="checkbox" disabled class="w-4 h-4 text-gray-300 rounded"></td>
                     </tr>
-                    <tr class="hover:bg-white/40">
+                    <tr class="hover:bg-[#EEF7FF]">
                         <td class="py-3 font-bold text-[#1D3B47]">Pengaturan Usaha & Karyawan</td>
                         <td class="py-3 text-center"><input type="checkbox" checked disabled class="w-4 h-4 text-[#4D869C] rounded"></td>
                         <td class="py-3 text-center"><input type="checkbox" disabled class="w-4 h-4 text-gray-300 rounded"></td>
@@ -295,7 +295,7 @@
             <div class="flex items-center justify-between mb-5 shrink-0">
                 <h3 class="text-lg sm:text-xl font-black text-[#1D3B47]">Edit karyawan</h3>
                 <button type="button" @click="showEditModal = false" 
-                        class="w-9 h-9 bg-[#4D869C] hover:bg-[#3D6B7D] text-white rounded-full flex items-center justify-center shrink-0 transition-colors">
+                        class="w-9 h-9 bg-[#CDE8E5] hover:bg-[#b8ded9] text-[#1D3B47] rounded-full flex items-center justify-center shrink-0 transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
@@ -309,7 +309,7 @@
                 <div>
                     <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">Nama lengkap</label>
                     <input type="text" name="name" required x-model="editForm.name" 
-                           class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]" 
+                           class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]" 
                            placeholder="Nama karyawan">
                 </div>
 
@@ -318,13 +318,13 @@
                     <div>
                         <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">Email atau nomor HP</label>
                         <input type="text" name="contact" required x-model="editForm.contact" 
-                               class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]" 
+                               class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]" 
                                placeholder="Email atau nomor HP">
                     </div>
                     <div>
                         <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">Peran</label>
                         <select name="role" required x-model="editForm.role" 
-                                class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
+                                class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
                             <option value="kasir">Kasir</option>
                             <option value="admin">Admin</option>
                         </select>
@@ -336,7 +336,7 @@
                     <div>
                         <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">Cabang</label>
                         <select name="branch_id" x-model="editForm.branch_id" 
-                                class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
+                                class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
                             <option value="">Semua cabang</option>
                             @foreach ($branches ?? [] as $branch)
                                 <option value="{{ $branch->id }}">{{ $branch->name }}</option>
@@ -346,7 +346,7 @@
                     <div>
                         <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">PIN kasir (4â€“6 angka)</label>
                         <input type="password" name="pin" maxlength="6" x-model="editForm.pin" 
-                               class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]" 
+                               class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]" 
                                placeholder="â€¢â€¢â€¢â€¢â€¢â€¢">
                     </div>
                 </div>
@@ -360,11 +360,11 @@
                     <input type="hidden" name="is_active" :value="editForm.is_active ? 1 : 0">
                     <button type="button" 
                             @click="if(!editForm.is_current) { editForm.is_active = !editForm.is_active }"
-                            :class="editForm.is_active ? 'bg-[#4D869C]' : 'bg-gray-300'"
+                            :class="editForm.is_active ? 'bg-[#4D869C]' : 'bg-[#CDE8E5]'"
                             :disabled="editForm.is_current"
                             class="w-12 h-6.5 border-2 border-[#4D869C] rounded-full p-0.5 transition-colors relative flex items-center shrink-0 cursor-pointer disabled:opacity-50">
                         <div :class="editForm.is_active ? 'translate-x-5.5' : 'translate-x-0'"
-                             class="w-4.5 h-4.5 rounded-full bg-[#4D869C] transition-transform shadow-xs"></div>
+                             class="w-4.5 h-4.5 rounded-full bg-white shadow-xs transition-transform"></div>
                     </button>
                 </div>
             </form>
@@ -398,7 +398,7 @@
                         Batal
                     </button>
                     <button type="submit" form="editEmployeeForm" 
-                            class="bg-[#4D869C] hover:bg-[#3D6B7D] text-white font-bold px-7 sm:px-8 py-3 rounded-full text-xs sm:text-sm shadow-sm transition-all cursor-pointer">
+                            class="bg-[#4D869C] hover:bg-[#3D6B7D] text-white font-bold px-7 py-2.5 rounded-full text-xs sm:text-sm shadow-xs transition-all cursor-pointer">
                         Simpan
                     </button>
                 </div>
@@ -443,18 +443,18 @@
                 <div>
                     <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">Nama lengkap <span class="text-[#d9383a]">*</span></label>
                     <input type="text" name="name" required value="{{ old('name') }}" 
-                           class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]" placeholder="Nama karyawan">
+                           class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]" placeholder="Nama karyawan">
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">Email atau nomor HP <span class="text-[#d9383a]">*</span></label>
                         <input type="text" name="contact" required value="{{ old('contact') }}" 
-                               class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]" placeholder="Untuk login">
+                               class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]" placeholder="Untuk login">
                     </div>
                     <div>
                         <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">Peran</label>
-                        <select name="role" required class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
+                        <select name="role" required class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
                             <option value="kasir">Kasir</option>
                             <option value="admin">Admin</option>
                         </select>
@@ -464,7 +464,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">Cabang</label>
-                        <select name="branch_id" class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
+                        <select name="branch_id" class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]">
                             <option value="">Semua cabang</option>
                             @foreach ($branches ?? [] as $branch)
                                 <option value="{{ $branch->id }}">{{ $branch->name }}</option>
@@ -474,7 +474,7 @@
                     <div>
                         <label class="block text-xs sm:text-sm font-bold text-[#1D3B47] mb-1.5">PIN kasir (4â€“6 angka)</label>
                         <input type="password" name="pin" maxlength="6" 
-                               class="w-full bg-white border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢">
+                               class="w-full bg-[#edf5fa] border border-[#D6E5ED] rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#1D3B47] focus:outline-none focus:ring-2 focus:ring-[#4D869C]" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢">
                     </div>
                 </div>
             </form>
