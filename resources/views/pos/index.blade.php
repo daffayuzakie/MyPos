@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kasir - {{ auth()->user()->business->name ?? 'POS' }}</title>
-    <link rel="icon" type="image/png" href="{{ Storage::url('logo mypos.png') }}">
-    <link rel="apple-touch-icon" href="{{ Storage::url('logo mypos.png') }}">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
+    <meta name="theme-color" content="#4D869C">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Fonts -->
@@ -74,12 +77,9 @@
         
         <!-- Sidebar Brand & Close Button -->
         <div class="flex items-center justify-between p-5 border-b border-[#B6D9D5] shrink-0">
-            <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-[#4D869C] flex items-center justify-center text-white font-black text-xl shadow-sm">
-                    P
-                </div>
-                <span class="text-[#1D3B47] font-extrabold text-lg tracking-tight">MyPos</span>
-            </div>
+            <a href="{{ route('dashboard') }}" class="flex items-center gap-3">
+                <img src="{{ asset('brand/mypos-wordmark.png') }}" alt="MyPos" width="900" height="331" class="h-8 w-auto">
+            </a>
             <!-- Toggle / Close Button -->
             <button @click="sidebarOpen = false" class="text-[#1D3B47]/70 hover:text-[#1D3B47] p-1.5 rounded-xl hover:bg-[#B6D9D5] transition-colors" title="Tutup Menu">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -197,15 +197,6 @@
 
                 <!-- Right: Online Status -->
                 <div class="flex items-center gap-2 shrink-0 justify-end">
-                    <!-- Tombol keranjang (mobile) -->
-                    <button @click="showMobileCart = true" aria-label="Buka keranjang"
-                            class="lg:hidden relative w-10 h-10 rounded-2xl bg-[#CDE8E5] hover:bg-[#d5e5ec] text-[#1D3B47] flex items-center justify-center shrink-0 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                        <span x-show="cartCount > 0" x-cloak
-                              class="absolute -top-1.5 -right-1.5 min-w-5 h-5 px-1 rounded-full bg-[#4D869C] text-white text-[10px] font-black flex items-center justify-center border-2 border-[#EEF7FF]"
-                              x-text="cartCount"></span>
-                    </button>
-
                     <div class="flex items-center gap-1.5 px-3 py-1.5 bg-[#CDE8E5] rounded-full text-xs font-semibold text-[#1D3B47]">
                         <span class="w-2 h-2 rounded-full" :class="$store.app?.isOnline !== false ? 'bg-[#4D869C]' : 'bg-[#d9383a]'"></span>
                         <span x-text="$store.app?.isOnline !== false ? 'Online' : 'Offline'">Online</span>
@@ -257,7 +248,7 @@
                              :class="cart.length > 0 ? 'pb-44' : 'pb-28'">
                             <template x-for="product in filteredProducts" :key="product.id">
                                 <div @click="addToCart(product)" 
-                                     class="bg-[#CDE8E5] border border-[#B6D9D5] rounded-3xl p-3 sm:p-3.5 cursor-pointer hover:shadow-lg hover:border-[#4D869C]/50 active:scale-[0.99] transition-all duration-200 flex flex-col justify-between group select-none relative">
+                                     class="bg-white border border-[#D6E5ED] rounded-3xl p-3 sm:p-3.5 cursor-pointer hover:shadow-lg hover:border-[#4D869C]/40 active:scale-[0.99] transition-all duration-200 flex flex-col justify-between group select-none relative">
                                     
                                     <!-- Card Kotak Warna Signature dengan Inisial Huruf Besar / Foto Produk -->
                                     <div class="w-full aspect-square rounded-2xl flex items-center justify-center relative transition-transform duration-200 group-hover:scale-[1.02] overflow-hidden"
@@ -435,15 +426,26 @@
     <div x-show="!$store.modal.open" x-cloak
          class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#CDE8E5] border-t border-[#B6D9D5] flex flex-col text-[#1D3B47] shadow-lg transition-all">
 
-        <!-- CART BAR: selalu menempel tepat di atas bottom nav -->
+        <!-- CART BAR: pill sticky tepat di atas bottom nav -->
         <div x-show="cart.length > 0" x-cloak class="px-3 pt-2.5">
             <button @click="showMobileCart = true" aria-label="Lihat keranjang"
-                    class="w-full bg-[#4D869C] hover:bg-[#3D6B7D] active:scale-[0.99] text-white py-3 px-5 rounded-2xl shadow-md flex items-center justify-between gap-3 font-bold text-sm transition-all">
-                <div class="flex items-center gap-2.5 min-w-0">
-                    <span class="w-7 h-7 rounded-full bg-white text-[#4D869C] flex items-center justify-center text-xs font-black shrink-0" x-text="cartCount"></span>
-                    <span class="truncate">Lihat Keranjang</span>
-                </div>
-                <span class="text-base font-black shrink-0" x-text="formatPrice(totalAmount)"></span>
+                    class="w-full bg-[#4D869C] hover:bg-[#3D6B7D] active:scale-[0.99] text-white rounded-full pl-2 pr-4 py-2 shadow-lg flex items-center gap-3 transition-all">
+                <!-- Ikon keranjang + lencana jumlah item -->
+                <span class="relative w-11 h-11 rounded-full bg-white text-[#4D869C] flex items-center justify-center shrink-0 shadow-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                    <span x-show="cartCount > 0"
+                          class="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full bg-[#1D3B47] text-white text-[10px] font-black flex items-center justify-center border-2 border-[#4D869C]"
+                          x-text="cartCount"></span>
+                </span>
+
+                <!-- Label + total -->
+                <span class="flex-1 min-w-0 text-left leading-tight">
+                    <span class="block text-[11px] font-semibold text-white/75">Lihat keranjang</span>
+                    <span class="block text-sm font-black truncate" x-text="formatPrice(totalAmount)"></span>
+                </span>
+
+                <!-- Panah -->
+                <svg class="w-5 h-5 shrink-0 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
             </button>
         </div>
 

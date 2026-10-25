@@ -7,8 +7,11 @@
 
     <title>{{ config('app.name', 'MyPos') }} — Aplikasi Kasir & Manajemen Toko</title>
 
-    <link rel="icon" type="image/png" href="{{ Storage::url('logo mypos.png') }}">
-    <link rel="apple-touch-icon" href="{{ Storage::url('logo mypos.png') }}">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
+    <meta name="theme-color" content="#4D869C">
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800,900&display=swap" rel="stylesheet" />
@@ -23,10 +26,7 @@
             <div class="flex items-center justify-between h-20">
                 <!-- Brand -->
                 <a href="{{ url('/') }}" class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-2xl bg-[#4D869C] text-white font-black text-xl flex items-center justify-center shrink-0 shadow-xs">
-                        P
-                    </div>
-                    <span class="text-xl font-black text-[#1D3B47] tracking-tight">MyPos</span>
+                    <img src="{{ asset('brand/mypos-wordmark.png') }}" alt="MyPos" width="900" height="331" class="h-9 w-auto">
                 </a>
 
                 <!-- Nav links -->
@@ -754,12 +754,9 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
                 <div class="col-span-2 md:col-span-1 space-y-3">
-                    <div class="flex items-center gap-2.5">
-                        <div class="w-8 h-8 rounded-xl bg-[#4D869C] text-white font-black text-base flex items-center justify-center shrink-0">
-                            P
-                        </div>
-                        <span class="text-base font-black text-[#1D3B47]">MyPos</span>
-                    </div>
+                    <a href="{{ url('/') }}" class="flex items-center gap-2.5">
+                        <img src="{{ asset('brand/mypos-wordmark.png') }}" alt="MyPos" width="900" height="331" class="h-7 w-auto">
+                    </a>
                     <p class="text-xs text-[#557785]">Aplikasi kasir dan manajemen toko.</p>
                 </div>
 

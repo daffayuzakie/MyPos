@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ config('app.name', 'Laravel POS') }}</title>
-    <link rel="icon" type="image/png" href="{{ Storage::url('logo mypos.png') }}">
-    <link rel="apple-touch-icon" href="{{ Storage::url('logo mypos.png') }}">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
+    <meta name="theme-color" content="#4D869C">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
     <!-- Fonts -->
@@ -37,14 +40,9 @@
         <div class="p-4 flex flex-col flex-1 overflow-y-auto">
             <!-- Brand -->
             <div class="flex items-center justify-between pb-6 pt-2 px-2">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-2xl bg-[#4D869C] text-white font-black text-xl flex items-center justify-center shrink-0 shadow-sm">
-                        P
-                    </div>
-                    <div class="font-black text-[#1D3B47] text-xl tracking-tight">
-                        MyPos
-                    </div>
-                </div>
+                <a href="{{ route('dashboard') }}" class="flex items-center gap-3">
+                    <img src="{{ asset('brand/mypos-wordmark.png') }}" alt="MyPos" width="900" height="331" class="h-9 w-auto">
+                </a>
                 <button @click="sidebarOpen = false" class="lg:hidden text-[#1D3B47]/70 hover:text-[#1D3B47] p-1.5 rounded-xl hover:bg-[#B6D9D5] transition-colors" title="Tutup Menu">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
