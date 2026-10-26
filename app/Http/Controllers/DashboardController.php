@@ -44,7 +44,7 @@ class DashboardController extends Controller
         $lowStockProducts = $lowStockQuery
             ->orderBy('stock', 'asc')
             ->limit(10)
-            ->get(['id', 'name', 'sku', 'stock']);
+            ->get(['id', 'name', 'sku', 'stock', 'image']);
 
         // Grafik Penjualan sesuai periode terpilih
         [$chartLabels, $chartData] = $this->buildSalesChart($businessId, $period, $today);
@@ -57,10 +57,11 @@ class DashboardController extends Controller
             ->where('sales.status', 'completed')
             ->select(
                 'products.name',
+                'products.image',
                 DB::raw('SUM(sale_items.quantity) as sold_qty'),
                 DB::raw('SUM(sale_items.subtotal) as revenue')
             )
-            ->groupBy('products.id', 'products.name')
+            ->groupBy('products.id', 'products.name', 'products.image')
             ->orderByDesc('sold_qty')
             ->limit(5)
             ->get();

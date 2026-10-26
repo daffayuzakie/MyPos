@@ -75,18 +75,31 @@ Route::middleware('auth')->group(function () {
     // Categories & Units API / Backend Endpoints
     Route::middleware('can:categories view')->group(function () {
         Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+    });
+    Route::middleware('can:categories create')->group(function () {
         Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
-        Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
         Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+    });
+    Route::middleware('can:categories edit')->group(function () {
+        Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
         Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
+    });
+    Route::middleware('can:categories delete')->group(function () {
         Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
     });
+
     Route::middleware('can:units view')->group(function () {
         Route::get('/units', [UnitController::class, 'index'])->name('units.index');
+    });
+    Route::middleware('can:units create')->group(function () {
         Route::get('/units/create', [UnitController::class, 'create'])->name('units.create');
-        Route::get('/units/{unit}/edit', [UnitController::class, 'edit'])->name('units.edit');
         Route::post('/units', [UnitController::class, 'store'])->name('units.store');
+    });
+    Route::middleware('can:units edit')->group(function () {
+        Route::get('/units/{unit}/edit', [UnitController::class, 'edit'])->name('units.edit');
         Route::put('/units/{unit}', [UnitController::class, 'update'])->name('units.update');
+    });
+    Route::middleware('can:units delete')->group(function () {
         Route::delete('/units/{unit}', [UnitController::class, 'destroy'])->name('units.destroy');
     });
 
@@ -99,19 +112,31 @@ Route::middleware('auth')->group(function () {
     });
 
     // Pelanggan
-    Route::middleware('can:sales create')->group(function () {
+    Route::middleware('can:customers view')->group(function () {
         Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
-        Route::post('/customers', [CustomerController::class, 'store'])->name('customers.store');
-        Route::put('/customers/{customer}', [CustomerController::class, 'update'])->name('customers.update');
-        Route::delete('/customers/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy');
         Route::get('/customers/{customer}', [CustomerController::class, 'show'])->name('customers.show');
+    });
+    Route::middleware('can:customers create')->group(function () {
+        Route::post('/customers', [CustomerController::class, 'store'])->name('customers.store');
+    });
+    Route::middleware('can:customers edit')->group(function () {
+        Route::put('/customers/{customer}', [CustomerController::class, 'update'])->name('customers.update');
+    });
+    Route::middleware('can:customers delete')->group(function () {
+        Route::delete('/customers/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy');
     });
 
     // Karyawan & Hak Akses (Image 5)
     Route::middleware('can:users view')->group(function () {
         Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    });
+    Route::middleware('can:users create')->group(function () {
         Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    });
+    Route::middleware('can:users edit')->group(function () {
         Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+    });
+    Route::middleware('can:users deactivate')->group(function () {
         Route::post('/users/{user}/activate', [UserController::class, 'activate'])->name('users.activate');
         Route::post('/users/{user}/deactivate', [UserController::class, 'deactivate'])->name('users.deactivate');
     });

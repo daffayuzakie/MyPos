@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreSaleRequest;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\HeldTransaction;
@@ -77,21 +78,8 @@ class PosController extends Controller
         return response()->json($products);
     }
 
-    public function checkout(Request $request, SaleService $saleService, MidtransService $midtrans, PaymentService $paymentService)
+    public function checkout(StoreSaleRequest $request, SaleService $saleService, MidtransService $midtrans, PaymentService $paymentService)
     {
-        $request->validate([
-            'items' => 'required|array',
-            'items.*.product_id' => 'required|exists:products,id',
-            'items.*.quantity' => 'required|integer|min:1',
-            'payment_method' => 'nullable|in:cash,midtrans',
-            'received_cash' => 'required_if:payment_method,cash|numeric|nullable',
-            'discount_type' => 'nullable|in:percentage,fixed',
-            'discount_value' => 'nullable|numeric',
-            'voucher_code' => 'nullable|string',
-            'customer_id' => 'nullable|exists:customers,id',
-            'notes' => 'nullable|string',
-        ]);
-
         $userId = auth()->id();
         $businessId = auth()->user()->business_id;
         $paymentMethod = $request->payment_method ?? 'cash';

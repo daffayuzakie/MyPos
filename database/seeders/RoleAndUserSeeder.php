@@ -18,6 +18,8 @@ class RoleAndUserSeeder extends Seeder
         $permissionNames = [
             'products view', 'products create', 'products edit', 'products delete',
             'categories view', 'categories create', 'categories edit', 'categories delete',
+            'units view', 'units create', 'units edit', 'units delete',
+            'customers view', 'customers create', 'customers edit', 'customers delete',
             'sales view-all', 'sales view-own', 'sales create', 'sales cancel',
             'users view', 'users create', 'users edit', 'users deactivate',
             'reports view', 'business settings',
@@ -41,6 +43,8 @@ class RoleAndUserSeeder extends Seeder
         $managerPermissions = [
             'products view', 'products create', 'products edit', 'products delete',
             'categories view', 'categories create', 'categories edit', 'categories delete',
+            'units view', 'units create', 'units edit', 'units delete',
+            'customers view', 'customers create', 'customers edit',
             'sales view-all', 'sales view-own', 'sales create', 'sales cancel',
             'users view',
             'reports view',
@@ -54,6 +58,8 @@ class RoleAndUserSeeder extends Seeder
 
         $kasirPermissions = [
             'products view',
+            'customers view',
+            'customers create',
             'sales view-all',
             'sales view-own',
             'sales create',
@@ -70,19 +76,23 @@ class RoleAndUserSeeder extends Seeder
         $kasirRole = Role::where('name', 'kasir')->where('guard_name', 'web')->first();
         $kasirRole->permissions()->sync($kasirPermissionIds);
 
-        // 4. Buat Business terlebih dahulu (biuser_id NOT NULL)
-        $business = Business::firstOrCreate(
-            ['slug' => 'default-cafe'],
-            [
+        // 4. Buat Business terlebih dahulu (business_id NOT NULL)
+        $business = Business::where('slug', 'default-cafe')
+            ->orWhere('email', 'admin@default-cafe.test')
+            ->first();
+
+        if (! $business) {
+            $business = Business::create([
                 'name' => 'Default Cafe',
+                'slug' => 'default-cafe',
                 'email' => 'admin@default-cafe.test',
                 'phone' => '+628123456789',
                 'address' => 'Jl. Contoh No. 123',
                 'tax_percentage' => 0,
                 'invoice_prefix' => 'INV',
                 'invoice_sequence' => 1,
-            ]
-        );
+            ]);
+        }
 
         // Cabang utama untuk demo
         $primaryBranch = Branch::firstOrCreate(

@@ -16,6 +16,10 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, HasRoles, Notifiable;
 
+    public const STATUS_ACTIVE = 'active';
+
+    public const STATUS_INACTIVE = 'inactive';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -53,6 +57,14 @@ class User extends Authenticatable
         'branch_id' => 'integer',
         'status' => 'string',
     ];
+
+    /**
+     * Determine whether the account is allowed to authenticate.
+     */
+    public function isActive(): bool
+    {
+        return $this->status === self::STATUS_ACTIVE;
+    }
 
     /**
      * Deterministic lookup key for a plain PIN.

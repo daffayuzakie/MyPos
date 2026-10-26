@@ -13,7 +13,8 @@ class UserPolicy extends Policy
 
     public function view(User $user, User $target): bool
     {
-        return $this->authorizeBusiness($user, $target) && $user->can('users view');
+        return $user->can('users view')
+            && $this->ownsBusiness($user, $target);
     }
 
     public function create(User $user): bool
@@ -23,53 +24,23 @@ class UserPolicy extends Policy
 
     public function update(User $user, User $target): bool
     {
-        return $this->authorizeBusiness($user, $target) && $user->can('users edit');
-    }
-
-    public function activate(User $user, User $target): bool
-    {
-        // Prevent self-activation (though not harmful, keep consistent)
-        if ($user->id === $target->id) {
-            return false;
-        }
-
-        return $this->authorizeBusiness($user, $target) && $user->can('users edit');
+        return $user->can('users edit')
+            && $this->ownsBusiness($user, $target)
+            && ! $this->isProtectedAdmin($user, $target);
     }
 
     public function deactivate(User $user, User $target): bool
     {
-        // Prevent self-deactivation
-        if ($user->id === $target->id) {
-            return false;
-        }
-
-        return $this->authorizeBusiness($user, $target) && $user->can('users deactivate');
+        return $user->can('users deactivate')
+            && $this->ownsBusiness($user, $target)
+            && ! $this->isProtectedAdmin($user, $target);
     }
 
-    public function assignRole(User $user, User $target, string $role): bool
+    /**
+     * Prevent non-admin staff from modifying an admin account.
+     */
+    private function isProtectedAdmin(User $user, User $target): bool
     {
-        // Valid roles for business
-        $validRoles = ['admin', 'kasir'];
-
-        if (! in_array($role, $validRoles)) {
-            return false;
-        }
-
-        // Prevent self-role change
-        if ($user->id === $target->id) {
-            return false;
-        }
-
-        // Must own the target user's business
-        if (! $this->authorizeBusiness($user, $target)) {
-            return false;
-        }
-
-        // Must have edit permission
-        if (! $user->can('users edit')) {
-            return false;
-        }
-
-        return true;
+        return $target->hasRole('admin') && ! $user->hasRole('admin');
     }
 }

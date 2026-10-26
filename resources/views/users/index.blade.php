@@ -88,12 +88,14 @@
         </div>
 
         <!-- Action Button -->
+        @can('users create')
         <div>
             <button @click="showCreateModal = true" 
                     class="bg-[#4D869C] hover:bg-[#3D6B7D] text-white font-bold px-6 py-2.5 rounded-full text-xs sm:text-sm transition-all shadow-xs flex items-center gap-1.5 cursor-pointer">
                 + Tambah karyawan
             </button>
         </div>
+        @endcan
     </div>
 
     <!-- Main Workspace: FULL-WIDTH TABLE DATA KARYAWAN (Matching Karyawan.png) -->
@@ -161,6 +163,7 @@
                         <!-- Aksi (Edit + Nonaktifkan) -->
                         <td class="py-3.5 pl-3 text-right whitespace-nowrap">
                             <div class="flex items-center justify-end gap-3">
+                                @can('users edit')
                                 <button type="button" 
                                         @click="openEditModal({{ json_encode([
                                             'id' => $u->id,
@@ -174,7 +177,9 @@
                                         class="text-[#4D869C] hover:text-[#3D6B7D] font-bold text-xs sm:text-sm underline decoration-[#4D869C] decoration-2 transition-all cursor-pointer">
                                     Edit
                                 </button>
+                                @endcan
 
+                                @can('users deactivate')
                                 @if($u->status === 'active' && $u->id !== auth()->id())
                                     <form method="POST" action="{{ route('users.deactivate', $u) }}" class="inline">
                                         @csrf
@@ -192,6 +197,7 @@
                                 @else
                                     <span class="text-xs font-bold text-gray-400">Akun Anda</span>
                                 @endif
+                                @endcan
                             </div>
                         </td>
                     </tr>

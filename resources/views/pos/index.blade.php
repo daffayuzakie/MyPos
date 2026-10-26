@@ -1485,9 +1485,13 @@
                             body: JSON.stringify(payload)
                         });
 
-                        const data = await res.json();
+                        const data = await res.json().catch(() => ({}));
                         if (!res.ok) {
-                            throw new Error(data.error || 'Terjadi kesalahan saat transaksi.');
+                            const validationError = data.errors
+                                ? Object.values(data.errors)[0]?.[0]
+                                : null;
+
+                            throw new Error(data.error || validationError || 'Terjadi kesalahan saat transaksi.');
                         }
 
                         if (data.pending && data.payment_method === 'midtrans') {

@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -40,48 +43,31 @@ class UserController extends Controller
     /**
      * Store a newly created employee.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreUserRequest $request): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'contact' => 'required|string|max:255', // email or phone
-            'role' => 'required|string|in:admin,kasir,manajer',
-            'branch_id' => 'nullable|integer|exists:branches,id',
-            'pin' => 'nullable|string|min:4|max:6',
-            'password' => 'nullable|string|min:6',
-        ]);
+        $data = $request->validated();
+        $contact = $data['contact'];
 
-        $businessId = auth()->user()->business_id;
-        $contact = $request->input('contact');
+        // Keep the login identifier usable when the form only captures a phone number.
+        $email = filter_var($contact, FILTER_VALIDATE_EMAIL)
+            ? $contact
+            : 'emp_'.Str::lower(Str::random(10)).'@pos.local';
 
-        // Determine if contact is email or phone
-        $email = filter_var($contact, FILTER_VALIDATE_EMAIL) ? $contact : 'emp_'.time().'@pos.local';
-
-        // Check unique email if actual email provided
-        if (filter_var($contact, FILTER_VALIDATE_EMAIL) && User::where('email', $email)->exists()) {
+        if (User::where('email', $email)->exists()) {
             return back()->withErrors(['contact' => 'Email ini sudah terdaftar.'])->withInput();
         }
 
-        $roleName = $request->input('role');
-        $role = Role::firstOrCreate(['name' => $roleName, 'guard_name' => 'web']);
-
-        $branchId = $request->input('branch_id');
-
-        if ($branchId && ! auth()->user()->business->branches()->whereKey($branchId)->exists()) {
-            return back()->withErrors(['branch_id' => 'Cabang tidak valid.'])->withInput();
-        }
-
         $user = User::create([
-            'name' => $request->input('name'),
+            'name' => $data['name'],
             'email' => $email,
-            'password' => Hash::make($request->input('password') ?? 'password123'),
-            'pin' => $request->filled('pin') ? $request->input('pin') : null,
-            'business_id' => $businessId,
-            'branch_id' => $branchId,
-            'status' => 'active',
+            'password' => Hash::make($data['password'] ?? 'password123'),
+            'pin' => $data['pin'] ?? null,
+            'business_id' => auth()->user()->business_id,
+            'branch_id' => $data['branch_id'] ?? null,
+            'status' => User::STATUS_ACTIVE,
         ]);
 
-        $user->assignRole($role);
+        $user->assignRole($data['role']);
 
         return redirect()->route('users.index')->with('status', 'Karyawan baru berhasil ditambahkan.');
     }
@@ -91,11 +77,9 @@ class UserController extends Controller
      */
     public function activate(User $user): RedirectResponse
     {
-        if ($user->business_id !== auth()->user()->business_id) {
-            abort(403);
-        }
+        $this->authorize('deactivate', $user);
 
-        $user->update(['status' => 'active']);
+        $user->update(['status' => User::STATUS_ACTIVE]);
 
         return redirect()->route('users.index')->with('status', 'Karyawan berhasil diaktifkan.');
     }
@@ -103,53 +87,50 @@ class UserController extends Controller
     /**
      * Update the specified user/employee.
      */
-    public function update(Request $request, User $user): RedirectResponse
+    public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
-        if ($user->business_id !== auth()->user()->business_id) {
-            abort(403);
+        $data = $request->validated();
+        $contact = $data['contact'];
+
+        $email = filter_var($contact, FILTER_VALIDATE_EMAIL)
+            ? $contact
+            : $user->email;
+
+        if (filter_var($contact, FILTER_VALIDATE_EMAIL)
+            && User::where('email', $email)->where('id', '!=', $user->id)->exists()) {
+            return back()->withErrors(['contact' => 'Email ini sudah digunakan akun lain.'])->withInput();
         }
 
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'contact' => 'required|string|max:255',
-            'role' => 'required|string|in:admin,kasir,manajer',
-            'branch_id' => 'nullable|integer',
-            'pin' => 'nullable|string|min:4|max:6',
-            'password' => 'nullable|string|min:6',
-        ]);
-
-        $contact = $request->input('contact');
-        $email = filter_var($contact, FILTER_VALIDATE_EMAIL) ? $contact : $user->email;
-
-        if (filter_var($contact, FILTER_VALIDATE_EMAIL)) {
-            $exists = User::where('email', $email)->where('id', '!=', $user->id)->exists();
-            if ($exists) {
-                return back()->withErrors(['contact' => 'Email ini sudah digunakan akun lain.'])->withInput();
-            }
-        }
-
-        $data = [
-            'name' => $request->input('name'),
+        $payload = [
+            'name' => $data['name'],
             'email' => $email,
-            'branch_id' => $request->input('branch_id') ?: null,
+            'branch_id' => $data['branch_id'] ?? null,
         ];
 
-        if ($request->filled('pin')) {
-            $data['pin'] = $request->input('pin');
-        }
-        if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->input('password'));
+        if (! empty($data['pin'])) {
+            $payload['pin'] = $data['pin'];
         }
 
-        if ($request->has('is_active') && $user->id !== auth()->id()) {
-            $data['status'] = $request->boolean('is_active') ? 'active' : 'inactive';
+        if (! empty($data['password'])) {
+            $payload['password'] = Hash::make($data['password']);
         }
 
-        $user->update($data);
+        if ($user->id !== auth()->id() && array_key_exists('is_active', $data)) {
+            $payload['status'] = $request->boolean('is_active')
+                ? User::STATUS_ACTIVE
+                : User::STATUS_INACTIVE;
+        }
 
-        $roleName = $request->input('role');
-        $role = Role::firstOrCreate(['name' => $roleName, 'guard_name' => 'web']);
-        $user->syncRoles([$role]);
+        $user->update($payload);
+
+        // Never let an admin change their own role and lock themselves out.
+        $roleName = $user->id === auth()->id()
+            ? $user->getRoleNames()->first()
+            : $data['role'];
+
+        if ($roleName) {
+            $user->syncRoles([$roleName]);
+        }
 
         return redirect()->route('users.index')->with('status', 'Data karyawan berhasil diperbarui.');
     }
@@ -159,15 +140,13 @@ class UserController extends Controller
      */
     public function deactivate(User $user): RedirectResponse
     {
-        if ($user->business_id !== auth()->user()->business_id) {
-            abort(403);
-        }
+        $this->authorize('deactivate', $user);
 
         if ($user->id === auth()->id()) {
             return redirect()->route('users.index')->withErrors(['error' => 'Anda tidak dapat menonaktifkan akun sendiri.']);
         }
 
-        $user->update(['status' => 'inactive']);
+        $user->update(['status' => User::STATUS_INACTIVE]);
 
         return redirect()->route('users.index')->with('status', 'Karyawan berhasil dinonaktifkan.');
     }

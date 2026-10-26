@@ -151,9 +151,13 @@
                     @forelse($topProducts ?? [] as $product)
                     <div class="flex items-center justify-between gap-3">
                         <div class="flex items-center gap-3.5 min-w-0">
+                            @if($product->image)
+                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-11 h-11 rounded-2xl object-cover shrink-0 shadow-xs border border-[#D6E5ED]">
+                            @else
                             <div class="w-11 h-11 rounded-2xl flex items-center justify-center font-black text-base shrink-0 shadow-xs {{ $avatarColors[$loop->index % count($avatarColors)] }}">
                                 {{ strtoupper(substr($product->name, 0, 1)) }}
                             </div>
+                            @endif
                             <div class="min-w-0">
                                 <h4 class="font-bold text-sm sm:text-base text-[#1D3B47] truncate leading-tight">{{ $product->name }}</h4>
                                 <p class="text-xs text-[#75929E] font-medium mt-0.5">{{ $product->sold_qty }} terjual</p>
@@ -178,9 +182,18 @@
                 <div class="space-y-3">
                     @forelse($lowStockProducts ?? [] as $product)
                     <div class="bg-white border-l-4 border-[#b91c1c] border-y border-r border-[#D6E5ED] rounded-2xl p-4 flex items-center justify-between text-[#1D3B47] shadow-xs">
-                        <div class="min-w-0 pr-3">
-                            <h4 class="font-bold text-sm sm:text-base text-[#1D3B47] leading-tight truncate">{{ $product->name }}</h4>
-                            <p class="text-xs text-[#75929E] font-semibold uppercase tracking-wider mt-0.5">{{ $product->sku }}</p>
+                        <div class="flex items-center gap-3 min-w-0 pr-3">
+                            @if($product->image)
+                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-10 h-10 rounded-xl object-cover shrink-0 shadow-xs border border-[#D6E5ED]">
+                            @else
+                                <div class="w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm shrink-0 shadow-xs bg-[#CDE8E5] text-[#1D3B47]">
+                                    {{ strtoupper(substr($product->name, 0, 1)) }}
+                                </div>
+                            @endif
+                            <div class="min-w-0">
+                                <h4 class="font-bold text-sm sm:text-base text-[#1D3B47] leading-tight truncate">{{ $product->name }}</h4>
+                                <p class="text-xs text-[#75929E] font-semibold uppercase tracking-wider mt-0.5 truncate">{{ $product->sku }}</p>
+                            </div>
                         </div>
                         <div class="text-[#d9383a] font-black text-2xl sm:text-3xl tracking-tight shrink-0">
                             {{ $product->stock }}

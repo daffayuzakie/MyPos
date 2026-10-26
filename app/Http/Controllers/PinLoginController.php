@@ -44,7 +44,7 @@ class PinLoginController extends Controller
             ->first();
 
         if ($user && Hash::check($pin, $user->pin)) {
-            return $this->authenticate($request, $user);
+            return $this->authenticateActiveUser($request, $user);
         }
 
         // Legacy fallback for users created before pin_lookup existed.
@@ -59,11 +59,20 @@ class PinLoginController extends Controller
                 $candidate->pin_lookup = $lookup;
                 $candidate->saveQuietly();
 
-                return $this->authenticate($request, $candidate);
+                return $this->authenticateActiveUser($request, $candidate);
             }
         }
 
         return back()->withInput()->withErrors(['pin' => 'PIN yang Anda masukkan salah.']);
+    }
+
+    private function authenticateActiveUser(Request $request, User $user): RedirectResponse
+    {
+        if (! $user->isActive()) {
+            return back()->withErrors(['pin' => 'Akun ini dinonaktifkan. Hubungi admin.']);
+        }
+
+        return $this->authenticate($request, $user);
     }
 
     private function authenticate(Request $request, User $user): RedirectResponse

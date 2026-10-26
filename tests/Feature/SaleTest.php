@@ -580,8 +580,8 @@ class SaleTest extends TestCase
             'received_cash' => 100000,
         ]);
 
-        $response->assertStatus(400);
-        $this->assertArrayHasKey('error', $response->json());
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('items.0.product_id');
     }
 
     public function test_sales_list_only_shows_own_business()
